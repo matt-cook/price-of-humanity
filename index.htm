@@ -1,7 +1,7 @@
 <html>
   <head>
     <script src="./js/lib/jquery.min.js"></script>
-    <script src="./js/lib/"></script>
+    <script src="./js/lib/jquery.transit.min.js"></script>
     <script src="./js/lib/jquery.csv.min.js"></script>
     <script src="./js/lib/jquery.exif.js"></script>
     <title>The Price of Humanity</title>
@@ -22,6 +22,19 @@ $( document ).ready(function() {
     
     var friends = [];
     var costs;
+    
+    
+    $.get('./data/cost.csv',function(data){
+        costs = $.csv.toObjects(data);
+        console.log(costs);
+        $.each(costs,function(i,c){
+          var id = c.location.trim().toLowerCase().replace(' ','-');
+          if(!$('#'+id).length){
+            $('#location ul').append('<li id="'+id+'"><a href="#">'+c.location.trim()+'</a></li>');
+          }
+          $('#cost ul').append('<li data-country="'+id+'"><a href="#">$'+c.cost.trim()+'</a></li>');
+        });
+    });
     
     $('a').click(function(e){
         FB.login(fbReady, {scope: 'basic_info,user_birthday,friends_birthday'});
@@ -64,10 +77,6 @@ $( document ).ready(function() {
         }
         
         function friendsReady(){
-            $.get('./data/cost.csv',function(data){
-              costs = $.csv.toObjects(data);
-              console.log(costs);
-            });
             console.log(friends);
         }
 
@@ -86,10 +95,10 @@ $( document ).ready(function() {
   </body>
     <div id="interface">
         <div id="cost">
-        
+          <ul></ul>
         </div>
         <div id="location">
-        
+            <ul></ul>
         </div>
     </div>
     <a href="#">start</a>
