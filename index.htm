@@ -1,0 +1,92 @@
+<html>
+  <head>
+    <script src="./js/lib/jquery.min.js"></script>
+    <script src="./js/lib/"></script>
+    <script src="./js/lib/jquery.csv.min.js"></script>
+    <script src="./js/lib/jquery.exif.js"></script>
+    <title>The Price of Humanity</title>
+      </head>
+  <body>
+  <div id="fb-root"></div>
+    <script>
+window.fbAsyncInit = function() {
+    //FB is ready
+    FB.init({
+      appId      : '428729383937921',
+      status     : true,
+      xfbml      : true
+    });
+
+$( document ).ready(function() {
+    //FB and jQuery are ready
+    
+    var friends = [];
+    
+    $('a').click(function(e){
+        FB.login(fbReady, {scope: 'basic_info,user_birthday,friends_birthday'});
+    });
+    
+        function fbReady() {
+                 getFriends();
+        }
+        
+        function getFriends() {
+            FB.api('/me/friends?fields=id,name,first_name,gender,birthday', function(a) {
+                if(a.data) {
+                    $.each(a.data,function(i,friend) {
+                    
+                        console.log();
+                        FB.api('/'+friend.id+'/picture?width=9999&height=9999',
+                        function(b) {
+                            if(!b.is_silhouette) {
+                                friends[i] = {};
+                                friends[i].name = friend.first_name;
+                                friends[i].gender = friend.gender;
+                                friends[i].photo = b.data.url;
+                                friends[i].age = '';
+                                if(friend.birthday){
+                                    var c = friend.birthday.split('/');
+                                    if(c.length == 3){
+                                        friends[i].age =  new Date().getFullYear() - parseInt(c[2]);
+                                    }
+                                }
+                            }
+                            if(i == a.data.length-1){
+                                friendsReady();
+                            }
+                        });
+                    });
+                   
+                } else {
+                    alert("Error!");
+                }
+            });
+        }
+        
+        function friendsReady(){
+            console.log(friends);
+        }
+
+});
+
+};
+
+(function(d, s, id){
+ var js, fjs = d.getElementsByTagName(s)[0];
+ if (d.getElementById(id)) {return;}
+ js = d.createElement(s); js.id = id;
+ js.src = "//connect.facebook.net/en_US/all.js";
+ fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));
+    </script>
+  </body>
+    <div id="interface">
+        <div id="cost">
+        
+        </div>
+        <div id="location">
+        
+        </div>
+    </div>
+    <a href="#">start</a>
+  </html>
