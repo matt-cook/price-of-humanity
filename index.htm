@@ -21,6 +21,7 @@ $( document ).ready(function() {
     //FB and jQuery are ready
     
     var friends = [];
+    var costs;
     
     $('a').click(function(e){
         FB.login(fbReady, {scope: 'basic_info,user_birthday,friends_birthday'});
@@ -35,7 +36,6 @@ $( document ).ready(function() {
                 if(a.data) {
                     $.each(a.data,function(i,friend) {
                     
-                        console.log();
                         FB.api('/'+friend.id+'/picture?width=9999&height=9999',
                         function(b) {
                             if(!b.is_silhouette) {
@@ -64,6 +64,10 @@ $( document ).ready(function() {
         }
         
         function friendsReady(){
+            $.get('./data/cost.csv',function(data){
+              costs = $.csv.toObjects(data);
+              console.log(costs);
+            });
             console.log(friends);
         }
 
