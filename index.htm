@@ -5,10 +5,77 @@
     <script src="./js/lib/jquery.csv.min.js"></script>
     <script src="./js/lib/jquery.exif.js"></script>
     <title>The Price of Humanity</title>
-      </head>
+    <link rel="stylesheet" href="css/reset.css" type="text/css">
+    <style type="text/css">
+       ul, li{
+            margin:0;
+           padding;0;
+           list-style-type:none;
+       }
+       #interface{
+        height:100%;
+        width:100%;
+        position:fixed;
+       }
+       #header{
+        height:10%;
+        width:100%;
+        position:absolute;
+        background:rgba(0,0,0,0.75);
+        text-align:center;
+       }
+       #cost{
+        height:90%;
+        width:5%;
+        position:absolute;
+        top:10%;
+        left:0;
+        background:rgba(0,0,0,0.75);
+       }
+       #location{
+        height:90%;
+        width:10%;
+        position:absolute;
+        right:0;
+        top:10%;
+        background:rgba(0,0,0,0.75);
+       }
+       #content{
+        width:100%;
+        background:green;
+        position:absolute;
+        height:100%;
+       }
+       #content li{
+        display:block;
+        width:100%;
+        height:100%;
+        border-top:1px solid red;
+        background:orange;
+        overflow:hidden;
+        position:relative;
+       }
+       .left{
+        position:absolute;
+        top:0;
+        left:0;
+        min-height:100%;
+        height:auto;
+        width:60%;
+       }
+       .right{
+        position:absolute;
+        top:0;
+        right:0;
+        min-height:100%;
+        height:auto;
+        width:60%;
+       }
+    </style>
+  </head>
   <body>
   <div id="fb-root"></div>
-    <script>
+    <script>    
 window.fbAsyncInit = function() {
     //FB is ready
     FB.init({
@@ -22,7 +89,6 @@ $( document ).ready(function() {
     
     var friends = [];
     var costs;
-    
     
     $.get('./data/cost.csv',function(data){
         costs = $.csv.toObjects(data);
@@ -93,7 +159,25 @@ $( document ).ready(function() {
 }(document, 'script', 'facebook-jssdk'));
     </script>
   </body>
+    <div id="content">
+        <ul>
+            <li>
+                <img class="left" src="http://placekitten.com/768/1024" alt="" />
+                <img class="right" src="http://placekitten.com/768/1025" alt="" />
+            </li>
+            <li>
+                
+            </li>
+            <li>
+                
+            </li>
+        </ul>
+    </div>
     <div id="interface">
+        
+        <div id="header">
+            <a href="#">start</a>
+        </div>
         <div id="cost">
           <ul></ul>
         </div>
@@ -101,5 +185,4 @@ $( document ).ready(function() {
             <ul></ul>
         </div>
     </div>
-    <a href="#">start</a>
   </html>
