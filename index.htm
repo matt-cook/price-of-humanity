@@ -3,6 +3,7 @@
     <script src="./js/lib/jquery.min.js"></script>
     <script src="./js/lib/jquery.transit.min.js"></script>
     <script src="./js/lib/jquery.csv.min.js"></script>
+    <script src="./js/lib/jquery.ba-throttle-debounce.min.js"></script>
     <title>The Price of Humanity</title>
     <link rel="stylesheet" href="css/reset.css" type="text/css">
     <style type="text/css">
@@ -133,10 +134,12 @@ $( document ).ready(function() {
     var costImages;
     var dataLoaded = false;
     var friendsLoaded = false;
+    var $window = $(window);
     
-    //test drawing
-
-    
+    $(window).scroll($.debounce( 500, function(){
+        var h = $window.height();
+        $("html, body").animate({ scrollTop: (Math.round($window.scrollTop()/h)*h)+"px" });
+    }));
     
     $.get('./data/cost.csv',function(data){
         costs = $.csv.toObjects(data);
@@ -175,6 +178,7 @@ $( document ).ready(function() {
         };
         image.src = './img/cost/'+costImages[i].filename;
         });
+        
         });
     });
     
