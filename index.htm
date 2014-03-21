@@ -68,7 +68,6 @@
         display:block;
         width:100%;
         height:100%;
-        border-top:1px solid red;
         overflow:hidden;
         position:relative;
        }
@@ -94,7 +93,6 @@
         bottom:40px;
         left:0;
         text-align:center;
-        z-index:10;
         width:100%;
        }
        #content h2, #content h3{
@@ -135,24 +133,7 @@ $( document ).ready(function() {
     var friendsLoaded = false;
     
     //test drawing
-    var canvas = $('canvas').get(0);
-    var image = new Image();
-    var ctx = canvas.getContext('2d');
-    image.onload = function() {
-        canvas.width = image.width;
-        canvas.height = image.height;
-        ctx.globalCompositeOperation = 'source-over';
-        ctx.drawImage(image, 0, 0);
-        ctx.globalCompositeOperation = 'destination-out';
-        ctx.beginPath();
-        ctx.moveTo(0, 0);
-        //canvas is 60% of total, so 10% overlap total = 15% of canvas
-        ctx.lineTo(parseInt(0.15*canvas.width),0); 
-        ctx.lineTo(0,canvas.height);
-        ctx.closePath();
-        ctx.fill();
-    };
-    image.src = 'http://placekitten.com/768/1026';
+
     
     
     $.get('./data/cost.csv',function(data){
@@ -160,11 +141,35 @@ $( document ).ready(function() {
         dataLoaded = true;
         loadComplete();
         $.each(costs,function(i,c){
-          var id = c.location.trim().toLowerCase().replace(' ','-');
-          if(!$('#'+id).length){
-            $('#location ul').append('<li id="'+id+'"><a href="#">'+c.location.trim()+'</a></li>');
+          var countryID = c.location.trim().toLowerCase().replace(' ','-');
+          var costID = 'cost'+i;
+          if(!$('#'+countryID).length){
+            $('#location ul').append('<li id="'+countryID+'"><a href="#">'+c.location.trim()+'</a></li>');
           }
-          $('#cost ul').append('<li data-country="'+id+'"><a href="#">$'+c.cost.trim()+'</a></li>');
+          $('#cost ul').append('<li id="'+costID+'" data-country="'+countryID+'"><a href="#">$'+c.cost.trim()+'</a></li>');
+          var html = '<li data-cost="'+costID+'"><img src="http://placekitten.com/768/1026" alt="" /><canvas></canvas><div class="info"><h2><span class="name">Matt</span>&#39;s life is worth $'+c.cost+'</h2><br><h3>as '+c.as+' in '+c.location;
+          if(c.when) html += ', '+c.when;
+          html += '.</h3></div></li>';
+          $c = $(html).appendTo($('#content ul'));
+        var canvas = $c.find('canvas').get(0);
+        var image = new Image();
+        var ctx = canvas.getContext('2d');
+        image.onload = function() {
+            canvas.width = image.width;
+            canvas.height = image.height;
+            ctx.globalCompositeOperation = 'source-over';
+            ctx.drawImage(image, 0, 0);
+            ctx.globalCompositeOperation = 'destination-out';
+            ctx.beginPath();
+            ctx.moveTo(0, 0);
+            //canvas is 60% of total, so 10% overlap total = 15% of canvas
+            ctx.lineTo(parseInt(0.15*canvas.width),0); 
+            ctx.lineTo(0,canvas.height);
+            ctx.closePath();
+            ctx.fill();
+        };
+        image.src = 'http://placekitten.com/768/1036';
+          
         });
     });
     
@@ -232,36 +237,13 @@ $( document ).ready(function() {
 }(document, 'script', 'facebook-jssdk'));
     </script>
   </body>
-    <div id="content">
-        <ul>
-            <li>
-                <img src="http://placekitten.com/768/1024" alt="" />
-                <canvas></canvas>
-                <div class="info">
-                    <h2>Sheralynn's life is worth $45,000</h2>
-                    <br>
-                    <h3>as a woman in India, 2013.</h3>
-                </div>
-            </li>
-            <li>
-                
-            </li>
-            <li>
-                
-            </li>
-        </ul>
-    </div>
+    <div id="content"><ul></ul></div>
     <div id="interface">
-        
         <div id="header">
             <h1>The Price of Humanity</h1>
             <a href="#">start</a>
         </div>
-        <div id="cost">
-          <ul></ul>
-        </div>
-        <div id="location">
-            <ul></ul>
-        </div>
+        <div id="cost"><ul></ul></div>
+        <div id="location"><ul></ul></div>
     </div>
   </html>
