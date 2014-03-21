@@ -89,10 +89,13 @@ $( document ).ready(function() {
     
     var friends = [];
     var costs;
+    var dataLoaded = false;
+    var friendsLoaded = false;
     
     $.get('./data/cost.csv',function(data){
         costs = $.csv.toObjects(data);
-        console.log(costs);
+        dataLoaded = true;
+        loadComplete();
         $.each(costs,function(i,c){
           var id = c.location.trim().toLowerCase().replace(' ','-');
           if(!$('#'+id).length){
@@ -101,6 +104,16 @@ $( document ).ready(function() {
           $('#cost ul').append('<li data-country="'+id+'"><a href="#">$'+c.cost.trim()+'</a></li>');
         });
     });
+    
+    function loadComplete(){
+        if(friendsLoaded && dataLoaded){
+            //ready to go
+            console.log("costs:");
+            console.log(costs);
+            console.log("friends:");
+            console.log(friends);
+        }
+    }
     
     $('a').click(function(e){
         FB.login(fbReady, {scope: 'basic_info,user_birthday,friends_birthday'});
@@ -131,7 +144,8 @@ $( document ).ready(function() {
                                 }
                             }
                             if(i == a.data.length-1){
-                                friendsReady();
+                                friendsLoaded = true;
+                                loadComplete();
                             }
                         });
                     });
@@ -140,10 +154,6 @@ $( document ).ready(function() {
                     alert("Error!");
                 }
             });
-        }
-        
-        function friendsReady(){
-            console.log(friends);
         }
 
 });
