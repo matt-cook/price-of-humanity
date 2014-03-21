@@ -41,20 +41,43 @@
         margin:0 0 0 10px;
        }
        #cost{
-        height:90%;
         width:100px;
         position:absolute;
-        top:10%;
-        left:-100px;
-        background:rgba(0,0,0,0.75);
+        top:40px;
+        bottom:0px;
+        left:0px;
+        background:#000;
        }
        #location{
-        height:90%;
         width:150px;
         position:absolute;
-        right:-150px;
-        top:10%;
-        background:rgba(0,0,0,0.75);
+        right:0px;
+        top:40px;
+        bottom:0px;
+        background:#000;
+       }
+       #cost li{
+        text-indent:-9999;
+        display:block;
+        height:1px;
+        width:100%;
+        background:#fff;
+        margin:1px 0;
+        opacity:0.5;
+       }
+       #location li{
+        margin:1px 0;
+        font-size:12px;
+        background:#fff;
+        opacity:0.5;
+        text-align:left;
+        padding:0px 4px 0px 10px;
+        height:17px;
+        line-height:17px;
+        display:block;
+       }
+       #location li a{
+        color:#000;
        }
        #content{
         height:100%;
@@ -75,11 +98,11 @@
        #content img, #content canvas{
         position:absolute;
         top:0;
-        filter: saturate(25%);
-        -webkit-filter: saturate(25%);
-        -moz-filter: saturate(25%);
-        -o-filter: saturate(25%);
-        -ms-filter: saturate(25%);
+        filter: saturate(20%);
+        -webkit-filter: saturate(20%);
+        -moz-filter: saturate(20%);
+        -o-filter: saturate(20%);
+        -ms-filter: saturate(20%);
         min-height:100%;
         height:auto;
         width:60%;
@@ -135,7 +158,7 @@ $( document ).ready(function() {
     var friendsLoaded = false;
     var $window = $(window);
     
-    $(window).scroll($.debounce( 500, function(){
+    $(window).scroll($.debounce(500, function(){
         var h = $window.height();
         $("html, body").animate({ scrollTop: (Math.round($window.scrollTop()/h)*h)+"px" });
     }));
@@ -169,8 +192,7 @@ $( document ).ready(function() {
             ctx.globalCompositeOperation = 'destination-out';
             ctx.beginPath();
             ctx.moveTo(0, 0);
-            //canvas is 60% of total, so 10% overlap total = 15% of canvas
-            ctx.lineTo(parseInt(0.15*canvas.width),0); 
+            ctx.lineTo(parseInt(0.27*canvas.width),0);
             ctx.lineTo(0,canvas.height);
             ctx.closePath();
             ctx.fill();
@@ -249,10 +271,10 @@ $( document ).ready(function() {
   </body>
     <div id="content"><ul></ul></div>
     <div id="interface">
+        <div id="cost"><ul></ul></div>
+        <div id="location"><ul></ul></div>
         <div id="header">
             <h1><a href="#">The Price of Humanity</a></h1>
         </div>
-        <div id="cost"><ul></ul></div>
-        <div id="location"><ul></ul></div>
     </div>
   </html>
