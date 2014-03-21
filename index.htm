@@ -71,21 +71,23 @@
         overflow:hidden;
         position:relative;
        }
-       #content img{
+       #content img, #content canvas{
         position:absolute;
         top:0;
-        left:0;
+        filter: saturate(25%);
+        -webkit-filter: saturate(25%);
+        -moz-filter: saturate(25%);
+        -o-filter: saturate(25%);
+        -ms-filter: saturate(25%);
         min-height:100%;
         height:auto;
         width:60%;
        }
+       #content img{
+        left:0;
+       }
        #content canvas{
-        position:absolute;
-        top:0;
         right:0;
-        min-height:100%;
-        height:auto;
-        width:60%;
        }
        #content .info{
         display:block;
@@ -168,7 +170,7 @@ $( document ).ready(function() {
             ctx.closePath();
             ctx.fill();
         };
-        image.src = 'http://placekitten.com/768/1036';
+        image.src = './img/cost/'+(i+1)+'.jpg';
           
         });
     });
