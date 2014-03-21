@@ -212,17 +212,27 @@ $( document ).ready(function() {
     $.get('./data/cost.csv',function(data){
         costs = $.csv.toObjects(data);
         $.get('./data/cost-images.csv',function(data){
-        
         costImages = $.csv.toObjects(data);
+        costImages.sort(function compare(a,b) {
+          var aC = parseInt(a.cost.replace(/,/g, ""));
+          var bC = parseInt(b.cost.replace(/,/g, ""));
+          if (aC < bC) return -1;
+          if (bC > aC) return 1;
+          return 0;
+        });
         dataLoaded = true;
         loadComplete();
+        var minCost = costs[0].cost;
+        var maxCost = costs[costs.length-1].cost;
+        $('#cost .min').text('$'+minCost).attr('data-value',minCost.cost.replace(/,/g, ""));
+        $('#cost .max').text('$'+maxCost).attr('data-value',maxCost.cost.replace(/,/g, ""));
         $.each(costs,function(i,c){
           var countryID = c.location.trim().toLowerCase().replace(' ','-');
           var costID = 'cost'+i;
           if(!$('#'+countryID).length){
             $('#location ul').append('<li id="'+countryID+'"><a href="#">'+c.location.trim()+'</a></li>');
           }
-          $('#cost ul').append('<li id="'+costID+'" data-country="'+countryID+'"><a href="#">$'+c.cost.trim()+'</a></li>');
+          $('#cost ul').append('<li id="'+costID+'" data-value="'+c.cost.replace(/,/g, "")+'" data-country="'+countryID+'"><a href="#">$'+c.cost.trim()+'</a></li>');
           var html = '<li data-cost="'+costID+'"><img src="http://placekitten.com/768/1026" alt="" /><canvas></canvas><div class="info"><h2><span class="name">Matt</span>&#39;s life is worth $'+c.cost+'</h2><br><h3>as '+c.as+' in '+c.location;
           if(c.when) html += ', '+c.when;
           html += '.</h3></div></li>';
@@ -323,7 +333,11 @@ $( document ).ready(function() {
     </script>
     <div id="content"><ul></ul></div>
     <div id="interface">
-        <div id="cost"><ul></ul></div>
+        <div id="cost">
+          <ul></ul>
+          <div class="label max" data-value="100000">$100,000</div>
+          <div class="label min" data-value="48">$48</div>
+        </div>
         <div id="location"><ul></ul></div>
         <div id="header">
             <h1><a href="#">The Price of Humanity</a></h1>
