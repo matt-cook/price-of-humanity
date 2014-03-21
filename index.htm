@@ -40,6 +40,31 @@
         font-weight:bold;
         margin:0 0 0 10px;
        }
+       .overlay{
+        position:absolute;
+        top:0;
+        left:0;
+        height:100%;
+        width:100%;
+        bottom:0;
+        right:0;
+        background:rgba(0,0,0,0.75);
+        text-align:center;
+       }
+       .message{
+        position:absolute;
+        top:50%;
+        height:10em;
+        margin:-6em auto 0 auto;
+        background:#000;
+        padding:1em;
+       }
+       .button{
+        color:#000;
+        background:#fff;
+        padding:4px 8px;
+        font-size:1.5em;
+       }
        #cost{
         width:100px;
         position:absolute;
@@ -278,11 +303,16 @@ $( document ).ready(function() {
             		}
             	}
             });
+            $('.overlay').hide();
         }
     }
     
-    $('a').click(function(e){
+    $('.facebook.button').click(function(e){
+        $('#start').html('<p>Loading friends...</p>').addClass('loading');
         FB.login(getFriends, {scope: 'basic_info,user_birthday,friends_birthday'});
+    });
+    $('.message.close').click(function(){
+      $('.overlay').hide();
     });
         
         function getFriends() {
@@ -341,6 +371,13 @@ $( document ).ready(function() {
         <div id="location"><ul></ul></div>
         <div id="header">
             <h1><a href="#">The Price of Humanity</a></h1>
+        </div>
+        <div class="overlay">
+          <div id="start" class="message">
+            <a class="facebook button" href="#">Log-in with Facebook</a>
+            <p>(We won't be storing or sharing your information)</p>
+            <p>or <a href="#" class="close">view only our photos</a></p>
+          </div>
         </div>
     </div>
     <script>
