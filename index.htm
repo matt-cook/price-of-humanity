@@ -130,6 +130,7 @@ $( document ).ready(function() {
     
     var friends = [];
     var costs;
+    var costImages;
     var dataLoaded = false;
     var friendsLoaded = false;
     
@@ -139,6 +140,9 @@ $( document ).ready(function() {
     
     $.get('./data/cost.csv',function(data){
         costs = $.csv.toObjects(data);
+        $.get('./data/cost-images.csv',function(data){
+        
+        costImages = $.csv.toObjects(data);
         dataLoaded = true;
         loadComplete();
         $.each(costs,function(i,c){
@@ -169,8 +173,8 @@ $( document ).ready(function() {
             ctx.closePath();
             ctx.fill();
         };
-        image.src = './img/cost/'+(i+1)+'.jpg';
-          
+        image.src = './img/cost/'+costImages[i].filename;
+        });
         });
     });
     
@@ -179,6 +183,8 @@ $( document ).ready(function() {
             //ready to go
             console.log("costs:");
             console.log(costs);
+            console.log("costs images:");
+            console.log(costImages);
             console.log("friends:");
             console.log(friends);
         }
