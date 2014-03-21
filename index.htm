@@ -3,7 +3,7 @@
     <script src="./js/lib/jquery.min.js"></script>
     <script src="./js/lib/jquery.transit.min.js"></script>
     <script src="./js/lib/jquery.csv.min.js"></script>
-    <script src="./js/lib/jquery.exif.js"></script>
+    <script src="./js/lib/jquery.ba-throttle-debounce.min.js"></script>
     <title>The Price of Humanity</title>
     <link rel="stylesheet" href="css/reset.css" type="text/css">
     <style type="text/css">
@@ -13,6 +13,7 @@
        }
        a{
         color:#fff;
+        text-decoration:none;
        }
        ul, li{
             margin:0;
@@ -71,21 +72,23 @@
         overflow:hidden;
         position:relative;
        }
-       #content img{
+       #content img, #content canvas{
         position:absolute;
         top:0;
-        left:0;
+        filter: saturate(25%);
+        -webkit-filter: saturate(25%);
+        -moz-filter: saturate(25%);
+        -o-filter: saturate(25%);
+        -ms-filter: saturate(25%);
         min-height:100%;
         height:auto;
         width:60%;
        }
+       #content img{
+        left:0;
+       }
        #content canvas{
-        position:absolute;
-        top:0;
         right:0;
-        min-height:100%;
-        height:auto;
-        width:60%;
        }
        #content .info{
         display:block;
@@ -125,19 +128,23 @@ window.fbAsyncInit = function() {
 $( document ).ready(function() {
     //FB and jQuery are ready
     
-    
-    
     var friends = [];
     var costs;
+    var costImages;
     var dataLoaded = false;
     var friendsLoaded = false;
+    var $window = $(window);
     
-    //test drawing
-
-    
+    $(window).scroll($.debounce( 500, function(){
+        var h = $window.height();
+        $("html, body").animate({ scrollTop: (Math.round($window.scrollTop()/h)*h)+"px" });
+    }));
     
     $.get('./data/cost.csv',function(data){
         costs = $.csv.toObjects(data);
+        $.get('./data/cost-images.csv',function(data){
+        
+        costImages = $.csv.toObjects(data);
         dataLoaded = true;
         loadComplete();
         $.each(costs,function(i,c){
@@ -168,8 +175,9 @@ $( document ).ready(function() {
             ctx.closePath();
             ctx.fill();
         };
-        image.src = 'http://placekitten.com/768/1036';
-          
+        image.src = './img/cost/'+costImages[i].filename;
+        });
+        
         });
     });
     
@@ -249,8 +257,7 @@ $( document ).ready(function() {
     <div id="content"><ul></ul></div>
     <div id="interface">
         <div id="header">
-            <h1>The Price of Humanity</h1>
-            <a href="#">start</a>
+            <h1><a href="#">The Price of Humanity</a></h1>
         </div>
         <div id="cost"><ul></ul></div>
         <div id="location"><ul></ul></div>
