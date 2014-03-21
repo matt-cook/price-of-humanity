@@ -157,11 +157,57 @@ $( document ).ready(function() {
     var dataLoaded = false;
     var friendsLoaded = false;
     var $window = $(window);
+    var MENU_TIMEOUT = 2000;
+    var MENU_ANIM_TIME = 1000;
     
+    var menuTimeout = setTimeout(hideMenu,MENU_TIMEOUT);
+    
+    $(window).scroll(function(){
+        showMenu();
+    });
     $(window).scroll($.debounce(500, function(){
         var h = $window.height();
         $("html, body").animate({ scrollTop: (Math.round($window.scrollTop()/h)*h)+"px" });
     }));
+    
+    var animatingMenu = false;
+    var menuAnimTimeout;
+    function hideMenu(){
+        clearTimeout(menuAnimTimeout);
+        if(!animatingMenu){
+            animatingMenu = true;
+            $('#location').transition({
+                right:-$('#location').width(),
+                duration: MENU_ANIM_TIME
+            });
+            $('#cost').transition({
+                left:-$('#cost').width(),
+                duration: MENU_ANIM_TIME
+            });
+        }
+        menuAnimTimeout = setTimeout(function(){animatingMenu = false;},MENU_ANIM_TIME);
+    }
+    
+    function showMenu(){
+        clearTimeout(menuTimeout);
+        clearTimeout(menuAnimTimeout);
+        if(!animatingMenu){
+            animatingMenu = true;
+            $('#location').transition({
+                right:0,
+                duration: MENU_ANIM_TIME
+            });
+            $('#cost').transition({
+                left:0,
+                duration: MENU_ANIM_TIME
+            });
+        }
+        menuAnimTimeout = setTimeout(function(){
+            animatingMenu = false;
+            menuTimeout = setTimeout(hideMenu,MENU_TIMEOUT);
+        },MENU_ANIM_TIME);
+    }
+    
     
     $.get('./data/cost.csv',function(data){
         costs = $.csv.toObjects(data);
