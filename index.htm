@@ -247,6 +247,20 @@ $( document ).ready(function() {
         },MENU_ANIM_TIME);
     }
     
+    function selectLocation(countryID){
+      console.log(countryID);
+      $('.active').removeClass('active');
+      $('#'+countryID).addClass('active');
+      $('#cost li[data-country="'+countryID+'"]').addClass('active');
+    }
+    
+    function selectCost(costID){
+      console.log(costID);
+      $('.selected').removeClass('selected');
+      $('#'+costID).addClass('selected');
+      selectLocation($('#'+costID).attr('data-country'));
+    }
+    
     
     $.get('./data/cost.csv',function(data){
         costs = $.csv.toObjects(data);
@@ -269,12 +283,16 @@ $( document ).ready(function() {
           var countryID = c.location.trim().toLowerCase().replace(' ','-');
           var costID = 'cost'+i;
           if(!$('#'+countryID).length){
-            $('#location ul').append('<li id="'+countryID+'"><a href="#">'+c.location.trim()+'</a></li>');
+            $('#location ul').append('<li id="'+countryID+'"><a href="#">'+c.location.trim()+'</a></li>').find('a').click(function(){
+               selectLocation(countryID);
+            });
           }
           var value = parseInt(c.cost.replace(/,/g, ""));
           $('<li id="'+costID+'" data-value="'+value+'" data-country="'+countryID+'"><a href="#">$'+c.cost.trim()+'</a></li>').css({
             top:(Math.round((value-minCost)/(maxCost-minCost)*$(window).height()))+'px';
-          }).appendTo('#cost ul');
+          }).appendTo('#cost ul').find('a').click(function(){
+            selectCost(costID);
+          });
           var html = '<li data-cost="'+costID+'"><img src="http://placekitten.com/768/1026" alt="" /><canvas></canvas><div class="info"><h2><span class="name">Matt</span>&#39;s life is worth $'+c.cost+'</h2><br><h3>as '+c.as+' in '+c.location;
           if(c.when) html += ', '+c.when;
           html += '.</h3></div></li>';
