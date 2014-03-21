@@ -151,10 +151,10 @@ $( document ).ready(function() {
           if(c.when) html += ', '+c.when;
           html += '.</h3></div></li>';
           $c = $(html).appendTo($('#content ul'));
-        var canvas = $c.find('canvas').get(0);
-        var image = new Image();
-        var ctx = canvas.getContext('2d');
-        image.onload = function() {
+          var canvas = $c.find('canvas').get(0);
+          var image = new Image();
+          var ctx = canvas.getContext('2d');
+          image.onload = function() {
             canvas.width = image.width;
             canvas.height = image.height;
             ctx.globalCompositeOperation = 'source-over';
@@ -176,20 +176,28 @@ $( document ).ready(function() {
     function loadComplete(){
         if(friendsLoaded && dataLoaded){
             //ready to go
-            console.log("costs:");
-            console.log(costs);
-            console.log("friends:");
-            console.log(friends);
+            
+            $.each(costs,function(i,c){
+            	if(typeof c.gender === 'undefined' || c.gender.length == 0) c.gender = 'b';
+            	for ( var j = 0; j < friends.length; j++){
+            		if( typeof friends[j].gender != 'undefined' &&
+            		    (c.gender == 'b' || c.gender == friends[j].gender[0]) && 
+            		    !friends[j].used ){
+            			
+            			friends[j].used = true;
+            			var content = $("#content li")[i];
+            			$(content).find("img").attr("src", friends[j].photo);
+            			$(content).find(".name").text(friends[j].name);
+            			break;
+            		}
+            	}
+            });
         }
     }
     
     $('a').click(function(e){
-        FB.login(fbReady, {scope: 'basic_info,user_birthday,friends_birthday'});
+        FB.login(getFriends, {scope: 'basic_info,user_birthday,friends_birthday'});
     });
-    
-        function fbReady() {
-                 getFriends();
-        }
         
         function getFriends() {
             FB.api('/me/friends?fields=id,name,first_name,gender,birthday', function(a) {
@@ -204,6 +212,7 @@ $( document ).ready(function() {
                                 friends[i].gender = friend.gender;
                                 friends[i].photo = b.data.url;
                                 friends[i].age = '';
+                                friends[i].used = false;
                                 if(friend.birthday){
                                     var c = friend.birthday.split('/');
                                     if(c.length == 3){
