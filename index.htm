@@ -184,16 +184,30 @@ $( document ).ready(function() {
     var $window = $(window);
     var MENU_TIMEOUT = 2000;
     var MENU_ANIM_TIME = 1000;
+    var minCost;
+    var maxCost;
     
     var menuTimeout = setTimeout(hideMenu,MENU_TIMEOUT);
     
-    $(window).scroll(function(){
-        showMenu();
+    $(window).scroll(showMenu);
+    $(window).scroll($.debounce(500,snapToContent));
+    
+    $(window).resize(function() {
+        snapToContent();
+        if(dataLoaded){
+          $('#cost li').each(function(i,$c){
+            var value =  parseInt($c.attr('data-value'));
+            $c.css({
+              top:(Math.round((value-minCost)/(maxCost-minCost)*$(window).height()))+'px';
+            });
+          });
+        }
     });
-    $(window).scroll($.debounce(500, function(){
-        var h = $window.height();
+    
+    function snapToContent(){
+      var h = $window.height();
         $("html, body").animate({ scrollTop: (Math.round($window.scrollTop()/h)*h)+"px" });
-    }));
+    }
     
     var animatingMenu = false;
     var menuAnimTimeout;
@@ -245,10 +259,10 @@ $( document ).ready(function() {
           if (bC > aC) return 1;
           return 0;
         });
+        minCost = costs[0].cost;
+        maxCost = costs[costs.length-1].cost;
         dataLoaded = true;
         loadComplete();
-        var minCost = costs[0].cost;
-        var maxCost = costs[costs.length-1].cost;
         $('#cost .min').text('$'+minCost).attr('data-value',minCost.cost.replace(/,/g, ""));
         $('#cost .max').text('$'+maxCost).attr('data-value',maxCost.cost.replace(/,/g, ""));
         $.each(costs,function(i,c){
@@ -257,7 +271,10 @@ $( document ).ready(function() {
           if(!$('#'+countryID).length){
             $('#location ul').append('<li id="'+countryID+'"><a href="#">'+c.location.trim()+'</a></li>');
           }
-          $('#cost ul').append('<li id="'+costID+'" data-value="'+c.cost.replace(/,/g, "")+'" data-country="'+countryID+'"><a href="#">$'+c.cost.trim()+'</a></li>');
+          var value = parseInt(c.cost.replace(/,/g, ""));
+          $('<li id="'+costID+'" data-value="'+value+'" data-country="'+countryID+'"><a href="#">$'+c.cost.trim()+'</a></li>').css({
+            top:(Math.round((value-minCost)/(maxCost-minCost)*$(window).height()))+'px';
+          }).appendTo('#cost ul');
           var html = '<li data-cost="'+costID+'"><img src="http://placekitten.com/768/1026" alt="" /><canvas></canvas><div class="info"><h2><span class="name">Matt</span>&#39;s life is worth $'+c.cost+'</h2><br><h3>as '+c.as+' in '+c.location;
           if(c.when) html += ', '+c.when;
           html += '.</h3></div></li>';
