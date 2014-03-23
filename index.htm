@@ -39,6 +39,8 @@
         float:left;
         font-weight:bold;
         margin:0 0 0 10px;
+        z-index: 1;
+        position: relative;
        }
        .overlay{
         position:absolute;
@@ -48,35 +50,49 @@
         width:100%;
         bottom:0;
         right:0;
-        background:rgba(0,0,0,0.75);
+        background:rgba(25, 25, 25, 0.9);
         text-align:center;
        }
        .message{
-        position:absolute;
-        top:50%;
-        height:10em;
-        margin:-6em auto 0 auto;
-        background:#000;
-        padding:1em;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        height: 8em;
+        width: 20em;
+        margin: -6em 0 0 -11em;
+        background: #000;
+        padding: 3em 1em;
        }
-       .button{
-        color:#000;
-        background:#fff;
-        padding:4px 8px;
-        font-size:1.5em;
+       .message a{
+        text-decoration:underline;
+       }
+       .message sub{
+        margin:3em 0;
+        display:block;
+        font-size:0.65em;
+       }
+       .message .button{
+        color: #000;
+        background: #fff;
+        padding: 0.5em 1em;
+        font-size: 1.5em;
+        margin: 0 0 1em 0;
+        display: inline-block;
+        border-radius: 4px;
+        text-decoration:none;
        }
        #cost{
         width:100px;
         position:absolute;
         top:40px;
         bottom:0px;
-        left:0px;
+        left:-100px;
         background:#000;
        }
        #location{
         width:150px;
         position:absolute;
-        right:0px;
+        right:-150px;
         top:40px;
         bottom:0px;
         background:#000;
@@ -198,7 +214,7 @@ $( document ).ready(function() {
           $('#cost li').each(function(i,$c){
             var value =  parseInt($c.attr('data-value'));
             $c.css({
-              top:(Math.round((value-minCost)/(maxCost-minCost)*$(window).height()))+'px';
+              top:(Math.round((value-minCost)/(maxCost-minCost)*$(window).height()))+'px'
             });
           });
         }
@@ -266,7 +282,9 @@ $( document ).ready(function() {
         costs = $.csv.toObjects(data);
         $.get('./data/cost-images.csv',function(data){
         costImages = $.csv.toObjects(data);
-        costImages.sort(function compare(a,b) {
+        costs.sort(function compare(a,b) {
+            //console.log(a);
+           // console.log(b);
           var aC = parseInt(a.cost.replace(/,/g, ""));
           var bC = parseInt(b.cost.replace(/,/g, ""));
           if (aC < bC) return -1;
@@ -277,8 +295,8 @@ $( document ).ready(function() {
         maxCost = costs[costs.length-1].cost;
         dataLoaded = true;
         loadComplete();
-        $('#cost .min').text('$'+minCost).attr('data-value',minCost.cost.replace(/,/g, ""));
-        $('#cost .max').text('$'+maxCost).attr('data-value',maxCost.cost.replace(/,/g, ""));
+        $('#cost .min').text('$'+minCost).attr('data-value',minCost.replace(/,/g, ""));
+        $('#cost .max').text('$'+maxCost).attr('data-value',maxCost.replace(/,/g, ""));
         $.each(costs,function(i,c){
           var countryID = c.location.trim().toLowerCase().replace(' ','-');
           var costID = 'cost'+i;
@@ -289,7 +307,7 @@ $( document ).ready(function() {
           }
           var value = parseInt(c.cost.replace(/,/g, ""));
           $('<li id="'+costID+'" data-value="'+value+'" data-country="'+countryID+'"><a href="#">$'+c.cost.trim()+'</a></li>').css({
-            top:(Math.round((value-minCost)/(maxCost-minCost)*$(window).height()))+'px';
+            top:(Math.round((value-minCost)/(maxCost-minCost)*$(window).height()))+'px'
           }).appendTo('#cost ul').find('a').click(function(){
             selectCost(costID);
           });
@@ -410,8 +428,8 @@ $( document ).ready(function() {
         <div class="overlay">
           <div id="start" class="message">
             <a class="facebook button" href="#">Log-in with Facebook</a>
-            <p>(We won't be storing or sharing your information)</p>
-            <p>or <a href="#" class="close">view only our photos</a></p>
+            <br>or <a href="#" class="close">view only our photos</a>
+            <br><sub>Either way, we won't store or share your information.</sub>
           </div>
         </div>
     </div>
