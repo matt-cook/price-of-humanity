@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workspace
+   version = "1.0">
+   <FileRef
+      location = "group:../../Sites/cost/CNAME">
+   </FileRef>
+   <FileRef
+      location = "group:../../Sites/cost/css">
+   </FileRef>
+   <FileRef
+      location = "group:../../Sites/cost/data">
+   </FileRef>
+   <FileRef
+      location = "group:../../Sites/cost/img">
+   </FileRef>
+   <FileRef
+      location = "group:../../Sites/cost/index.htm">
+   </FileRef>
+   <FileRef
+      location = "group:../../Sites/cost/js">
+   </FileRef>
+   <FileRef
+      location = "group:../../Sites/cost/LICENSE">
+   </FileRef>
+   <FileRef
+      location = "group:../../Sites/cost/README.md">
+   </FileRef>
+</Workspace>
