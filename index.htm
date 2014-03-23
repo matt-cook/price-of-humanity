@@ -71,6 +71,20 @@
         display:block;
         font-size:0.65em;
        }
+       .message .status{
+        position: absolute;
+        left: 0;
+        text-align: center;
+        display: block;
+        width: 100%;
+        height: 1em;
+        margin: -0.7em 0 0 0;
+        padding: 0;
+        top: 50%;
+        text-transform: uppercase;
+        font-weight: bold;
+        font-size: 0.9em;
+       }
        .message .button{
         color: #000;
         background: #fff;
@@ -361,7 +375,7 @@ $( document ).ready(function() {
     }
     
     $('.facebook.button').click(function(e){
-        $('#start').html('<p>Loading friends...</p>').addClass('loading');
+        $('#start').html('<p class="status">Loading friends...</p>').addClass('loading');
         FB.login(getFriends, {scope: 'basic_info,user_birthday,friends_birthday'});
     });
     $('.message.close').click(function(){
