@@ -297,8 +297,6 @@ $( document ).ready(function() {
         $.get('./data/cost-images.csv',function(data){
         costImages = $.csv.toObjects(data);
         costs.sort(function compare(a,b) {
-            //console.log(a);
-           // console.log(b);
           var aC = parseInt(a.cost.replace(/,/g, ""));
           var bC = parseInt(b.cost.replace(/,/g, ""));
           if (aC < bC) return -1;
@@ -307,13 +305,12 @@ $( document ).ready(function() {
         });
         minCost = costs[0].cost;
         maxCost = costs[costs.length-1].cost;
-        dataLoaded = true;
-        loadComplete();
         $('#cost .min').text('$'+minCost).attr('data-value',minCost.replace(/,/g, ""));
         $('#cost .max').text('$'+maxCost).attr('data-value',maxCost.replace(/,/g, ""));
-        $.each(costs,function(i,c){
+        $.eachCallback(costs,function(){
+          var c = this;
           var countryID = c.location.trim().toLowerCase().replace(' ','-');
-          var costID = 'cost'+i;
+          var costID = 'cost'+c.ID;
           if(!$('#'+countryID).length){
             $('#location ul').append('<li id="'+countryID+'"><a href="#">'+c.location.trim()+'</a></li>').find('a').click(function(){
                selectLocation(countryID);
@@ -345,7 +342,13 @@ $( document ).ready(function() {
             ctx.closePath();
             ctx.fill();
         };
-        image.src = './img/cost/'+costImages[i].filename;
+        image.src = './img/cost/'+costImages[Math.floor(Math.random()*costImages.length)].filename;
+        },function(i){
+            //cost loading progress updated
+            if(i == costs.length-1){
+                dataLoaded = true;
+                loadComplete();
+            }
         });
         
         });
@@ -355,7 +358,8 @@ $( document ).ready(function() {
         if(friendsLoaded && dataLoaded){
             //ready to go
             
-            $.each(costs,function(i,c){
+            $.eachCallback(costs,function(){
+                var c = this;
             	if(typeof c.gender === 'undefined' || c.gender.length == 0) c.gender = 'b';
             	for ( var j = 0; j < friends.length; j++){
             		if( typeof friends[j].gender != 'undefined' &&
@@ -363,14 +367,21 @@ $( document ).ready(function() {
             		    !friends[j].used ){
             			
             			friends[j].used = true;
-            			var content = $("#content li")[i];
+            			var content = $('#content li[data-cost="cost'+c.ID+'"]');
             			$(content).find("img").attr("src", friends[j].photo);
             			$(content).find(".name").text(friends[j].name);
             			break;
             		}
             	}
+            },function(i){
+                //friend loading progress updated
+                var content = $('#content li[data-cost="cost'+costs[i].ID+'"]');
+                var name = $(content).find(".name").text();
+                $('.status').text('Loading '+name+'...');
+                if(i == costs.length - 1){
+                    $('.overlay').hide();
+                }
             });
-            $('.overlay').hide();
         }
     }
     
@@ -419,6 +430,9 @@ $( document ).ready(function() {
 });
 
 };
+
+//non-blocking loop: http://www.kryogenix.org/days/2009/07/03/not-blocking-the-ui-in-tight-javascript-loops/
+jQuery.eachCallback = function(arr, process, callback) { var cnt = 0; function work() { var item = arr[cnt]; process.apply(item); callback.apply(item, [cnt]); cnt += 1; if (cnt < arr.length) { setTimeout(work, 1); } } setTimeout(work, 1); }; jQuery.fn.eachCallback = function(process, callback) { var cnt = 0; var jq = this; function work() { var item = jq.get(cnt); process.apply(item); callback.apply(item, [cnt]); cnt += 1; if (cnt < jq.length) { setTimeout(work, 1); } } setTimeout(work, 1); };
 
 (function(d, s, id){
  var js, fjs = d.getElementsByTagName(s)[0];
