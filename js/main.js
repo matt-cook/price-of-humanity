@@ -21,8 +21,14 @@ $( document ).ready(function() {
     var maxCost;
     
     var menuTimeout = setTimeout(hideMenu,MENU_TIMEOUT);
-    
-    $(window).scroll(showMenu);
+    //busted for now, since we're also allowing click to select
+   /* $(window).scroll(function(e){
+        e.preventDefault();
+        showMenu();
+        var h = $window.height();
+        var i = Math.round($window.scrollTop()/h);
+        selectCost($($('#cost li').get(i)).attr('id'));
+    });*/
     $(window).scroll($.debounce(500,snapToContent));
     
     $(window).resize(function() {
@@ -38,8 +44,8 @@ $( document ).ready(function() {
     });
     
     function snapToContent(){
-      var h = $window.height();
-        $("html, body").animate({ scrollTop: (Math.round($window.scrollTop()/h)*h)+"px" });
+            var h = $window.height();
+            $("body").animate({ scrollTop: (Math.round($window.scrollTop()/h)*h)+"px" });
     }
     
     var animatingMenu = false;
@@ -81,24 +87,25 @@ $( document ).ready(function() {
     }
     
     function selectLocation(countryID){
-      $('#cost .active').css({
-        background:''
-      });
+      $('#cost .active').css({ background:''});
       $('.active').removeClass('active');
-     
+
       var color = $('#'+countryID).addClass('active').css('background-color');
       var $costs = $('#cost li[data-country="'+countryID+'"]');
       $costs.addClass('active').css({
         background:color
       });
-      if(!$costs.find('selected').length) selectCost($($costs.get(0)).attr('id'));
+      if(!$costs.filter('.selected').length) selectCost($($costs.get(0)).attr('id'));
     }
     
     function selectCost(costID){
       $('.selected').removeClass('selected');
-      $('#'+costID).addClass('selected');
-      var countryID = $('#'+costID).attr('data-country');
+      var $c = $('#'+costID);
+      $c.addClass('selected');
+      var countryID = $c.attr('data-country');
       if(!$('#'+countryID+'.active').length) selectLocation(countryID);
+      var h = $window.height();
+      $("body").animate({ scrollTop: ($c.index()*h)+"px" });
     }
     
     function setLocationHeight(){

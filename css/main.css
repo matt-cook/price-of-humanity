@@ -108,7 +108,7 @@ body{
             position:absolute;
             top:20px;
             left:0px;
-            bottom:30px;
+            bottom:32px;
             right:0px;
         }
         #cost .label{
@@ -139,14 +139,25 @@ body{
        #cost li{
         text-indent:-9999;
         display:block;
-        height:3px;
+        height:5px;
         width:90px;
-        background:#fff;
+        background:rgba(255,255,255,0.1);
         margin:1px 0;
-        opacity:0.1;
         position:absolute;
         left:0;
        }
+        #cost li a{
+            display:block;
+            width:100%;
+            height:100%;
+        }
+        #cost li a:hover{
+            background:#fff;
+        }
+        #cost li.selected a:hover{
+            background:none;
+        }
+        
        #cost li.active{
         opacity:0.5;
         z-index:1;
@@ -174,6 +185,10 @@ body{
         }
        #location li a{
         color:#000;
+        display:block;
+        height:100%;
+        width:100%;
+        
        }
        #content{
         height:100%;
