@@ -90,7 +90,7 @@ $( document ).ready(function() {
       $('#cost .active').css({ background:''});
       $('.active').removeClass('active');
 
-      var color = $('#'+countryID).addClass('active').css('background-color');
+      var color = $('#'+countryID).addClass('active').find('a').css('background-color');
       var $costs = $('#cost li[data-country="'+countryID+'"]');
       $costs.addClass('active').css({
         background:color
@@ -125,10 +125,11 @@ $( document ).ready(function() {
         $.each(locations,function(i,l){
             var countryID = l.title.trim().toLowerCase().replace(' ','-');
            $('<li id="'+countryID+'"><a href="#">'+l.label+'</a></li>').css({
-            "background-color":'#'+l.color,
-            "height":height+'px',
-            "line-height":height+'px'
-            }).hide().appendTo('#location ul').find('a').click(function(){
+                "height":height+'px',
+                "line-height":height+'px'
+            }).hide().appendTo('#location ul').find('a').css({
+                "background-color":'#'+l.color
+            }).click(function(){
                selectLocation(countryID);
             });
         });
