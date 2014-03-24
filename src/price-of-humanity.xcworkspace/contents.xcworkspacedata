@@ -2,27 +2,27 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "group:../../Sites/cost/CNAME">
+      location = "group:../CNAME">
    </FileRef>
    <FileRef
-      location = "group:../../Sites/cost/css">
+      location = "group:../css">
    </FileRef>
    <FileRef
-      location = "group:../../Sites/cost/data">
+      location = "group:../data">
    </FileRef>
    <FileRef
-      location = "group:../../Sites/cost/img">
+      location = "group:../img">
    </FileRef>
    <FileRef
-      location = "group:../../Sites/cost/index.htm">
+      location = "group:../index.htm">
    </FileRef>
    <FileRef
-      location = "group:../../Sites/cost/js">
+      location = "group:../js">
    </FileRef>
    <FileRef
-      location = "group:../../Sites/cost/LICENSE">
+      location = "group:../LICENSE">
    </FileRef>
    <FileRef
-      location = "group:../../Sites/cost/README.md">
+      location = "group:../README.md">
    </FileRef>
 </Workspace>

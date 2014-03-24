@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>6E3C4B61-FCAC-494F-B669-C084AA2D67AE</string>
+	<key>IDESourceControlProjectName</key>
+	<string>price-of-humanity</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>53704434-27A8-41FE-863D-DA38A93ACC94</key>
+		<string>https://github.com/lookitscook/price-of-humanity</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>src/price-of-humanity.xcworkspace</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>53704434-27A8-41FE-863D-DA38A93ACC94</key>
+		<string>../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/lookitscook/price-of-humanity</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>110</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>53704434-27A8-41FE-863D-DA38A93ACC94</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>53704434-27A8-41FE-863D-DA38A93ACC94</string>
+			<key>IDESourceControlWCCName</key>
+			<string>fb</string>
+		</dict>
+	</array>
+</dict>
+</plist>
