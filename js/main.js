@@ -15,16 +15,15 @@ $( document ).ready(function() {
     var dataLoaded = false;
     var friendsLoaded = false;
     var $window = $(window);
-    var MENU_TIMEOUT = 2000;
+    var MENU_TIMEOUT = 1500; //hide menu after inactivity
     var MENU_ANIM_TIME = 1000;
     var minCost;
     var maxCost;
-    
-    var menuTimeout = setTimeout(hideMenu,MENU_TIMEOUT);
+    var menuTimeout;
+  
+  
     //busted for now, since we're also allowing click to select
    /* $(window).scroll(function(e){
-        e.preventDefault();
-        showMenu();
         var h = $window.height();
         var i = Math.round($window.scrollTop()/h);
         selectCost($($('#cost li').get(i)).attr('id'));
@@ -48,12 +47,8 @@ $( document ).ready(function() {
             $("body").animate({ scrollTop: (Math.round($window.scrollTop()/h)*h)+"px" });
     }
     
-    var animatingMenu = false;
-    var menuAnimTimeout;
     function hideMenu(){
-        clearTimeout(menuAnimTimeout);
-       /* if(!animatingMenu){
-            animatingMenu = true;
+        if($('#interface').hasClass('open')){
             $('#location').transition({
                 right:-$('#location').width(),
                 duration: MENU_ANIM_TIME
@@ -61,16 +56,16 @@ $( document ).ready(function() {
             $('#cost').transition({
                 left:-$('#cost').width(),
                 duration: MENU_ANIM_TIME
+            },function(){
+              $('#interface').removeClass('open');
             });
-        }*/
-        menuAnimTimeout = setTimeout(function(){animatingMenu = false;},MENU_ANIM_TIME);
+        }
     }
     
     function showMenu(){
         clearTimeout(menuTimeout);
-        clearTimeout(menuAnimTimeout);
-        if(!animatingMenu){
-            animatingMenu = true;
+        if(!$('#interface').hasClass('open')){
+            $('#interface').addClass('open');
             $('#location').transition({
                 right:0,
                 duration: MENU_ANIM_TIME
@@ -79,11 +74,10 @@ $( document ).ready(function() {
                 left:0,
                 duration: MENU_ANIM_TIME
             });
+            menuTimeout = setTimeout(hideMenu,(MENU_ANIM_TIME+MENU_TIMEOUT));
+        }else{
+          menuTimeout = setTimeout(hideMenu,MENU_TIMEOUT);
         }
-        menuAnimTimeout = setTimeout(function(){
-            animatingMenu = false;
-            menuTimeout = setTimeout(hideMenu,MENU_TIMEOUT);
-        },MENU_ANIM_TIME);
     }
     
     function selectLocation(countryID){
@@ -236,7 +230,6 @@ $( document ).ready(function() {
     function loadComplete(){
         if(friendsLoaded && dataLoaded){
             //ready to go
-            
             $.eachCallback(costs,function(){
                 var c = this;
             	if(typeof c.gender === 'undefined' || c.gender.length == 0) c.gender = 'b';
@@ -257,21 +250,24 @@ $( document ).ready(function() {
                 var content = $('#content li[data-cost="cost'+costs[i].ID+'"]');
                 var name = $(content).find(".name").text();
                 $('.status').text('Loading '+name+'...');
-                if(i == costs.length - 1){
-                    $('.overlay').hide();
-                }
+                if(i == costs.length - 1) start();
             });
         }
     }
+    
+
     
     $('.facebook.button').click(function(e){
         $('.message').addClass('loading');
         $('.status').text('Loading friends...');
         FB.login(getFriends, {scope: 'basic_info,user_birthday,friends_birthday'});
     });
-    $('.message .close').click(function(){
+    $('.message .close').click(start);
+    
+    function start(){
       $('.overlay').hide();
-    });
+      $(window).mousemove(showMenu);
+    }
         
         function getFriends() {
             FB.api('/me/friends?fields=id,name,first_name,gender,birthday', function(a) {
