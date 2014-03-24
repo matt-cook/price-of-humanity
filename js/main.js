@@ -125,7 +125,42 @@ $( document ).ready(function() {
           }).appendTo('#cost ul').find('a').click(function(){
             selectCost(costID);
           });
-          var html = '<li data-cost="'+costID+'"><img src="http://placekitten.com/768/1026" alt="" /><canvas></canvas><div class="info"><h2><span class="name">Matt</span>&#39;s life is worth $'+c.cost+'</h2><br><h3>as '+c.as+' in '+c.location;
+          var img;
+          var name;
+          var maxImg = 9;
+          if(c.gender == 'f'){
+            //grete
+            img = "img/friends/grete/"+Math.ceil(Math.random()*maxImg)+'-grete.jpg';
+            name = "Grete";
+          }else if(c.gender = 'm'){
+            var who = Math.floor(Math.random()*2);
+            if(who ==0){
+                //kyle
+                img = "img/friends/kyle/"+Math.ceil(Math.random()*maxImg)+'-kyle.jpg';
+                name = "Kyle";
+            }else{
+                //matt
+                img = "img/friends/matt/"+Math.ceil(Math.random()*maxImg)+'-matt.jpg';
+                name = "Matt";
+            }
+          }else{
+            //no gender specified
+            var who = Math.floor(Math.random()*3);
+            if(who == 0){
+                //grete
+                img = "img/friends/grete/"+Math.ceil(Math.random()*maxImg)+'-grete.jpg';
+                name = "Grete";
+            }else if(who == 1){
+                //kyle
+                img = "img/friends/kyle/"+Math.ceil(Math.random()*maxImg)+'-kyle.jpg';
+                name = "Kyle";
+            }else{
+                //matt
+                img = "img/friends/matt/"+Math.ceil(Math.random()*maxImg)+'-matt.jpg';
+                name = "Matt";
+            }
+          }
+          var html = '<li data-cost="'+costID+'"><img src="'+img+'" alt="" /><canvas></canvas><div class="info"><h2><span class="name">'+name+'</span>&#39;s life is worth $'+c.cost+'</h2><br><h3>as '+c.as+' in '+c.location;
           if(c.when) html += ', '+c.when;
           html += '.</h3></div></li>';
           $c = $(html).appendTo($('#content ul'));
@@ -192,7 +227,7 @@ $( document ).ready(function() {
         $('#start').html('<p class="status">Loading friends...</p>').addClass('loading');
         FB.login(getFriends, {scope: 'basic_info,user_birthday,friends_birthday'});
     });
-    $('.message.close').click(function(){
+    $('.message .close').click(function(){
       $('.overlay').hide();
     });
         
