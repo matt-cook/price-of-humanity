@@ -99,29 +99,28 @@ $( document ).ready(function() {
         costs = $.csv.toObjects(data);
         $.get('./data/cost-images.csv',function(data){
         costImages = $.csv.toObjects(data);
-        costs.sort(function compare(a,b) {
-          var aC = parseInt(a.cost.replace(/,/g, ""));
-          var bC = parseInt(b.cost.replace(/,/g, ""));
-          if (aC < bC) return -1;
-          if (bC > aC) return 1;
-          return 0;
-        });
         minCost = costs[0].cost;
         maxCost = costs[costs.length-1].cost;
         $('#cost .min').text('$'+minCost).attr('data-value',minCost.replace(/,/g, ""));
         $('#cost .max').text('$'+maxCost).attr('data-value',maxCost.replace(/,/g, ""));
+        minCost = parseInt(minCost.replace(/,/g, ""));
+        maxCost = parseInt(maxCost.replace(/,/g, ""));
+        var currentCountryIndex = 0;
         $.eachCallback(costs,function(){
           var c = this;
           var countryID = c.location.trim().toLowerCase().replace(' ','-');
           var costID = 'cost'+c.ID;
+          var country = c.location.trim();
+          $('.status').text(Math.round(currentCountryIndex/costs.length*100)+"%: Loading "+country+"...");
           if(!$('#'+countryID).length){
-            $('#location ul').append('<li id="'+countryID+'"><a href="#">'+c.location.trim()+'</a></li>').find('a').click(function(){
+            $('#location ul').append('<li id="'+countryID+'"><a href="#">'+country+'</a></li>').find('a').click(function(){
                selectLocation(countryID);
             });
           }
           var value = parseInt(c.cost.replace(/,/g, ""));
+          var top = Math.round((value-minCost)/(maxCost-minCost)*$('#cost ul').height());
           $('<li id="'+costID+'" data-value="'+value+'" data-country="'+countryID+'"><a href="#">$'+c.cost.trim()+'</a></li>').css({
-            top:(Math.round((value-minCost)/(maxCost-minCost)*$(window).height()))+'px'
+            top:top+'px'
           }).appendTo('#cost ul').find('a').click(function(){
             selectCost(costID);
           });
@@ -183,7 +182,9 @@ $( document ).ready(function() {
         image.src = './img/cost/'+costImages[Math.floor(Math.random()*costImages.length)].filename;
         },function(i){
             //cost loading progress updated
+            currentCountryIndex = i;
             if(i == costs.length-1){
+                $('.message').removeClass("loading");
                 dataLoaded = true;
                 loadComplete();
             }
@@ -224,7 +225,8 @@ $( document ).ready(function() {
     }
     
     $('.facebook.button').click(function(e){
-        $('#start').html('<p class="status">Loading friends...</p>').addClass('loading');
+        $('.message').addClass('loading');
+        $('.status').text('Loading friends...');
         FB.login(getFriends, {scope: 'basic_info,user_birthday,friends_birthday'});
     });
     $('.message .close').click(function(){
