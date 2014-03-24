@@ -46,7 +46,7 @@ $( document ).ready(function() {
     var menuAnimTimeout;
     function hideMenu(){
         clearTimeout(menuAnimTimeout);
-        if(!animatingMenu){
+       /* if(!animatingMenu){
             animatingMenu = true;
             $('#location').transition({
                 right:-$('#location').width(),
@@ -56,7 +56,7 @@ $( document ).ready(function() {
                 left:-$('#cost').width(),
                 duration: MENU_ANIM_TIME
             });
-        }
+        }*/
         menuAnimTimeout = setTimeout(function(){animatingMenu = false;},MENU_ANIM_TIME);
     }
     
@@ -81,17 +81,24 @@ $( document ).ready(function() {
     }
     
     function selectLocation(countryID){
-      console.log(countryID);
+      $('#cost .active').css({
+        background:''
+      });
       $('.active').removeClass('active');
-      $('#'+countryID).addClass('active');
-      $('#cost li[data-country="'+countryID+'"]').addClass('active');
+     
+      var color = $('#'+countryID).addClass('active').css('background-color');
+      var $costs = $('#cost li[data-country="'+countryID+'"]');
+      $costs.addClass('active').css({
+        background:color
+      });
+      if(!$costs.find('selected').length) selectCost($($costs.get(0)).attr('id'));
     }
     
     function selectCost(costID){
-      console.log(costID);
       $('.selected').removeClass('selected');
       $('#'+costID).addClass('selected');
-      selectLocation($('#'+costID).attr('data-country'));
+      var countryID = $('#'+costID).attr('data-country');
+      if(!$('#'+countryID+'.active').length) selectLocation(countryID);
     }
     
     function setLocationHeight(){
