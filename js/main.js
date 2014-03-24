@@ -211,7 +211,14 @@ $( document ).ready(function() {
             ctx.closePath();
             ctx.fill();
         };
-        image.src = './img/cost/'+costImages[Math.floor(Math.random()*costImages.length)].filename;
+        var matches = [];
+        $.each(costImages,function(i,img){
+            var costs = img.costs.split(',');
+            $.each(costs,function(i,imgC){
+                if(imgC == c.ID) matches.push(img.filename);
+            });
+        });
+        image.src = matches.length? './img/cost/'+matches[Math.floor(Math.random()*matches.length)] : './img/cost/'+costImages[Math.floor(Math.random()*costImages.length)].filename;
         },function(i){
             //cost loading progress updated
             currentCountryIndex = i;
