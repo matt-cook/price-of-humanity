@@ -1,3 +1,8 @@
+if(!window.chrome) {
+  alert("This application requires Google Chrome");
+  window.location = "http://www.google.com/chrome";
+}
+
 window.fbAsyncInit = function() {
     //FB is ready
     FB.init({
