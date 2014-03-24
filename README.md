@@ -2,7 +2,7 @@ The Price of Humanity
 ==
 
 [http://www.priceofhumanity.com](http://www.priceofhumanity.com)
---
+###
 
 Original data source: [http://bit.ly/human_costs](http://bit.ly/human_costs)
 
