@@ -10,7 +10,7 @@ $( document ).ready(function() {
     //FB and jQuery are ready
     
     var friends = [];
-    var costs;
+    var costs, locations;
     var costImages;
     var dataLoaded = false;
     var friendsLoaded = false;
@@ -94,9 +94,31 @@ $( document ).ready(function() {
       selectLocation($('#'+costID).attr('data-country'));
     }
     
+    function setLocationHeight(){
+     var height = Math.floor(($('#location').height()-locations.length*2)/locations.length);
+        $('#location li').css({
+            "height":height+'px',
+            "line-height":height+'px'
+        });
+    }
     
     $.get('./data/cost.csv',function(data){
         costs = $.csv.toObjects(data);
+        
+        $.get('./data/locations.csv',function(data){
+         locations = $.csv.toObjects(data);
+         var height = Math.floor(($('#location').height()-locations.length*2)/locations.length);
+        $.each(locations,function(i,l){
+            var countryID = l.title.trim().toLowerCase().replace(' ','-');
+           $('<li id="'+countryID+'"><a href="#">'+l.label+'</a></li>').css({
+            "background-color":'#'+l.color,
+            "height":height+'px',
+            "line-height":height+'px'
+            }).hide().appendTo('#location ul').find('a').click(function(){
+               selectLocation(countryID);
+            });
+        });
+        
         $.get('./data/cost-images.csv',function(data){
         costImages = $.csv.toObjects(data);
         minCost = costs[0].cost;
@@ -112,11 +134,7 @@ $( document ).ready(function() {
           var costID = 'cost'+c.ID;
           var country = c.location.trim();
           $('.status').text(Math.round(currentCountryIndex/costs.length*100)+"%: Loading "+country+"...");
-          if(!$('#'+countryID).length){
-            $('#location ul').append('<li id="'+countryID+'"><a href="#">'+country+'</a></li>').find('a').click(function(){
-               selectLocation(countryID);
-            });
-          }
+          $('#'+countryID).show();
           var value = parseInt(c.cost.replace(/,/g, ""));
           var top = Math.round((value-minCost)/(maxCost-minCost)*$('#cost ul').height());
           $('<li id="'+costID+'" data-value="'+value+'" data-country="'+countryID+'"><a href="#">$'+c.cost.trim()+'</a></li>').css({
@@ -189,7 +207,7 @@ $( document ).ready(function() {
                 loadComplete();
             }
         });
-        
+        });
         });
     });
     

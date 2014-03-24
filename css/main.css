@@ -98,7 +98,7 @@ body{
         position:absolute;
         top:40px;
         bottom:0px;
-        left:-100px;
+        left:0px;
         background:#000;
        }
         #cost ul{
@@ -130,7 +130,7 @@ body{
        #location{
         width:150px;
         position:absolute;
-        right:-150px;
+        right:0px;
         top:40px;
         bottom:0px;
         background:#000;
@@ -153,15 +153,16 @@ body{
         width:100px;
        }
        #location li{
-        margin:1px 0;
+        margin:0 0 2px 10px;
         font-size:12px;
         background:#fff;
         opacity:0.5;
         text-align:left;
         padding:0px 4px 0px 10px;
-        height:17px;
-        line-height:17px;
+        height:20px;
+        line-height:20px;
         display:block;
+        width;190px;
        }
        #location li a{
         color:#000;
