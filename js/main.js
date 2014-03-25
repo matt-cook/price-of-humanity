@@ -191,14 +191,24 @@ $( document ).ready(function() {
                 name = "Matt";
             }
           }
-          var html = '<li data-cost="'+costID+'"><img src="'+img+'" alt="" /><canvas></canvas><div class="info"><h2><span class="name">'+name+'</span>&#39;s life is worth $'+c.cost+'</h2><br><h3>as '+c.as+' in '+c.location;
+          var html = '<li data-cost="'+costID+'"><canvas></canvas><div class="info"><h2><span class="name">'+name+'</span>&#39;s life is worth $'+c.cost+'</h2><br><h3>as '+c.as+' in '+c.location;
           if(c.when) html += ', '+c.when;
           html += '.</h3></div></li>';
           $c = $(html).appendTo($('#content ul'));
+          var $img = $('<img src="'+img+'" alt="" />').one('load', function() {
+            if(this.width >= this.height) $(this).addClass('horizontal');
+            else $(this).addClass('vertical');
+          }).each(function() {
+            if(this.complete) $(this).load();
+          });
+          $c.prepend($img);
+          
           var canvas = $c.find('canvas').get(0);
           var image = new Image();
           var ctx = canvas.getContext('2d');
           image.onload = function() {
+            if(this.width >= this.height) $(canvas).addClass('horizontal');
+            else $(canvas).addClass('vertical');
             canvas.width = image.width;
             canvas.height = image.height;
             ctx.globalCompositeOperation = 'source-over';
@@ -245,7 +255,13 @@ $( document ).ready(function() {
             			
             			friends[j].used = true;
             			var content = $('#content li[data-cost="cost'+c.ID+'"]');
-            			$(content).find("img").attr("src", friends[j].photo);
+            			$(content).find("img").attr("src", friends[j].photo).one('load', function() {
+                    if(this.width >= this.height) $(this).addClass('horizontal');
+                    else $(this).addClass('vertical');
+                  }).each(function() {
+                    if(this.complete) $(this).load();
+                  });
+                  
             			$(content).find(".name").text(friends[j].name);
             			break;
             		}
