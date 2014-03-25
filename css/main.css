@@ -3,6 +3,10 @@ body{
         font-family:helvetica,sans-serif;
         background:#333;
        }
+       .hidden{
+        visibility:hidden;
+        display:none;
+       }
        a{
         color:#fff;
         text-decoration:none;
@@ -24,6 +28,7 @@ body{
         background:#000;
         text-align:center;
         text-transform:uppercase;
+        overflow:hidden;
        }
        #header h1{
         height:40px;
@@ -33,6 +38,35 @@ body{
         margin:0 0 0 10px;
         z-index: 10;
         position: relative;
+       }
+       #header div{
+          position: absolute;
+          top: 0;
+          width: 50%;
+          height: 40px;
+          font-size: 0.7em;
+       }
+       #header .about{
+        left: 0;
+        text-align:right;
+       }
+       #header .about a{
+        color:#666;
+        position:absolute;
+        right:10px;
+        bottom:8px;
+       }
+       #header .photo-story{
+        right:0;
+       }
+       #header .photo-story a{
+        display:block;
+        position:absolute;
+        background:#333131;
+        left:10px;
+        bottom:0px;
+        padding:8px 10px;
+
        }
        .overlay{
         position:absolute;

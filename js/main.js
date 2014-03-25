@@ -19,13 +19,16 @@ $( document ).ready(function() {
     var dataLoaded = false;
     var friendsLoaded = false;
     var $window = $(window);
-    var MENU_TIMEOUT = 1000; //hide menu after inactivity
+    var MENU_TIMEOUT = 1500; //hide menu after inactivity
     var MENU_ANIM_TIME = 1000;
     var minCost;
     var maxCost;
     var menuTimeout;
-  
     $(window).scroll($.debounce(800,snapToContent));
+    $(window).on('scroll click',function(){
+      //$('.photo-story a').fadeOut();
+      $('.story').fadeOut();
+    });
     
     $(window).resize(function() {
         snapToContent();
@@ -41,7 +44,9 @@ $( document ).ready(function() {
     
     function snapToContent(){
         var h = $window.height();
-        $("body").animate({ scrollTop: (Math.round($window.scrollTop()/h)*h)+"px" });
+        $("body").animate({ scrollTop: (Math.round($window.scrollTop()/h)*h)+"px" },function(){
+          //if(!$('.photo-story a').is(':visible') && !$('.photo-story a').is(':animated')) $('.photo-story a').fadeIn();
+        });
         var i = Math.floor($window.scrollTop()/h);
         var costID = $($('#content li').get(i)).attr('data-cost');
         $('.selected').removeClass('selected');
@@ -205,7 +210,7 @@ $( document ).ready(function() {
                     return;
                 }
             });
-            var html = '<li data-cost="'+costID+'"><canvas></canvas><div class="story"><div class="story-details"><h4>why this price?</h4>'+c.detail+'<h5>What is in the photo?</h5></div><div class="region"><h4><span>this price is from </span>'+c.region+'.</h4><h4>'+c.region+' stats:</h4></div></div><div class="info"><h2><span class="name">'+name+'</span>&#39;s life is worth $'+c.cost+'</h2><br><h3>as '+c.as+' in '+c.location;
+            var html = '<li data-cost="'+costID+'"><canvas></canvas><div class="story hidden"><div class="story-details"><h4>why this price?</h4>'+c.detail+'<h5>What is in the photo?</h5></div><div class="region"><h4><span>this price is from </span>'+c.region+'.</h4><h4>'+c.region+' stats:</h4></div></div><div class="info"><h2><span class="name">'+name+'</span>&#39;s life is worth $'+c.cost+'</h2><br><h3>as '+c.as+' in '+c.location;
             if(c.when) html += ', '+c.when;
             html += '.</h3></div></li>';
             $c = $(html).appendTo($('#content ul'));
@@ -307,9 +312,17 @@ $( document ).ready(function() {
         FB.login(getFriends, {scope: 'basic_info,user_birthday,friends_birthday'});
     });
     $('.message .close').click(start);
+    $('.photo-story').click(function(e){
+        e.preventDefault();
+        if($('.story').is(':visible')) $('.story').fadeOut();
+        else $('.story').fadeIn();
+        return false;
+    });
     
     function start(){
       $('.overlay').hide();
+      $('.story').hide().removeClass('hidden');
+     // $('.photo-story a').hide().removeClass('hidden');
       var i = Math.round(Math.random()*costs.length);
       selectCost("cost"+costs[i].ID);
       $(window).mousemove(showMenu);
