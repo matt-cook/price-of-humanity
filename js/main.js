@@ -1,7 +1,7 @@
-if(!window.chrome) {
+/*if(!window.chrome) {
   alert("This application requires Google Chrome");
   window.location = "http://www.google.com/chrome";
-}
+}*/
 
 window.fbAsyncInit = function() {
     //FB is ready
@@ -24,25 +24,16 @@ $( document ).ready(function() {
     var minCost;
     var maxCost;
     var menuTimeout;
-  
     $(window).scroll($.debounce(800,snapToContent));
-    
-    $(window).resize(function() {
-        snapToContent();
-        if(dataLoaded){
-          $('#cost li').each(function(i,$c){
-            var value =  parseInt($c.attr('data-value'));
-            $c.css({
-              top:(Math.round((value-minCost)/(maxCost-minCost)*$(window).height()))+'px'
-            });
-          });
-        }
+    $(window).on('scroll click',function(){
+      //$('.photo-story a').fadeOut();
+      //$('.story').fadeOut();
+      $('#about').fadeOut();
     });
-    
-    function snapToContent(){
-        var h = $window.height();
-        $("body").animate({ scrollTop: (Math.round($window.scrollTop()/h)*h)+"px" });
-        var i = Math.floor($window.scrollTop()/h);
+    $(window).on('scroll',highlight);
+    function highlight(){
+        var h = window.innerHeight;
+        var i = Math.round($window.scrollTop()/h);
         var costID = $($('#content li').get(i)).attr('data-cost');
         $('.selected').removeClass('selected');
         var $c = $('#'+costID);
@@ -56,6 +47,27 @@ $( document ).ready(function() {
           background:color
         });
     }
+    
+    $(window).resize(function() {
+        snapToContent();
+        if(dataLoaded){
+          $('#cost li').each(function(i,c){
+            var value =  parseInt($(c).attr('data-value'));
+            $(c).css({
+              top:(Math.round((value-minCost)/(maxCost-minCost)*window.innerHeight))+'px'
+            });
+          });
+        }
+    });
+    
+    function snapToContent(){
+
+        var h = window.innerHeight;
+        $("body").animate({ scrollTop: (Math.round($window.scrollTop()/h)*h)+"px" },function(){
+          //if(!$('.photo-story a').is(':visible') && !$('.photo-story a').is(':animated')) $('.photo-story a').fadeIn();
+        });
+    }
+
     
     function hideMenu(){
         if($('#interface').hasClass('open')){
@@ -102,13 +114,17 @@ $( document ).ready(function() {
     }
     
     function selectCost(costID){
+      $(window).off('scroll',highlight);
       $('.selected').removeClass('selected');
       var $c = $('#'+costID);
       $c.addClass('selected');
       var countryID = $c.attr('data-country');
       if(!$('#'+countryID+'.active').length) selectLocation(countryID);
-      var h = $window.height();
-      $("body").animate({ scrollTop: ($c.index()*h)+"px" });
+      var h = window.innerHeight;
+      $("body").animate({ scrollTop: ($c.index()*h)+"px" },function(){
+        $(window).on('scroll',highlight);
+      });
+
     }
     
     function setLocationHeight(){
@@ -205,7 +221,30 @@ $( document ).ready(function() {
                     return;
                 }
             });
-            var html = '<li data-cost="'+costID+'"><canvas></canvas><div class="story"><div class="story-details"><h4>why this price?</h4>'+c.detail+'<h5>What is in the photo?</h5></div><div class="region"><h4><span>this price is from </span>'+c.region+'.</h4><h4>'+c.region+' stats:</h4></div></div><div class="info"><h2><span class="name">'+name+'</span>&#39;s life is worth $'+c.cost+'</h2><br><h3>as '+c.as+' in '+c.location;
+
+            $.each(costImages,function(i,img){
+                if(c.cost == img.costs){
+                    c.imgCaption = img.caption;
+                    c.imgSrc = img.url;
+                    return;
+                }
+            });
+            var whyPrice = (typeof c.detail === 'undefined' || c.detail.length == 0) ? '' : c.detail+' ';
+            var whyPriceSrc = (typeof c.link_1 === 'undefined' || c.link_1.length == 0) ? '' : 'Check out the <a href="'+c.link_1+'">Source</a>';
+            whyPrice += whyPriceSrc;
+            whyPrice  = (whyPrice.length != 0) ? '<h4>why this price?</h4>'+whyPrice :'';
+            
+            
+            var whatPhoto = (typeof c.imgCaption === 'undefined' || c.imgCaption.length == 0) ? '' : c.imgCaption+' ';
+            var whatPhotoSrc = (typeof c.imgSrc === 'undefined' || c.imgSrc.length == 0) ? '' : 'See the photo&#39;s <a href="'+c.imgSrc+'">Source</a>';
+            whatPhoto += whatPhotoSrc;
+            whatPhoto = (whatPhoto.length != 0) ? '<h5>What is in the photo?</h5>'+whatPhoto : '';
+            
+            var details = (whyPrice.length != 0 ||  whatPhoto.length != 0) ? '<div class="story-details">'+whyPrice+whatPhoto+'</div>' : '';
+            
+            var region = '<div class="region"><h4><span>this price is from </span>'+c.region+'.</h4><h4>'+c.region+' stats:</h4></div>'
+            var html = '<li data-cost="'+costID+'"><canvas></canvas><div class="story hidden">'+details+region+'</div><div class="info"><h2><span class="name">'+name+'</span>&#39;s life is worth $'+c.cost+'</h2><br><h3>as '+c.as+' in '+c.location;
+
             if(c.when) html += ', '+c.when;
             html += '.</h3></div></li>';
             $c = $(html).appendTo($('#content ul'));
@@ -220,6 +259,7 @@ $( document ).ready(function() {
             var canvas = $c.find('canvas').get(0);
             var image = new Image();
             var ctx = canvas.getContext('2d');
+            var w = $('#content')
             image.onload = function() {
               if(this.width >= this.height) $(canvas).addClass('horizontal');
               else $(canvas).addClass('vertical');
@@ -306,9 +346,26 @@ $( document ).ready(function() {
         FB.login(getFriends, {scope: 'basic_info,user_birthday,friends_birthday'});
     });
     $('.message .close').click(start);
+    /*$('.photo-story').click(function(e){
+        e.preventDefault();
+        if($('.story').is(':visible')) $('.story').fadeOut();
+        else $('.story').fadeIn();
+        return false;
+    });*/
+    $('.about a').click(function(e){
+        e.preventDefault();
+        if($('#about').is(':visible')) $('#about').fadeOut();
+        else $('#about').fadeIn();
+        return false;
+    });
     
     function start(){
       $('.overlay').hide();
+     // $('.story').hide().removeClass('hidden');
+     // $('.photo-story a').hide().removeClass('hidden');
+      $('#about').hide().removeClass('hidden');
+      var i = Math.round(Math.random()*costs.length);
+      selectCost("cost"+costs[i].ID);
       $(window).mousemove(showMenu);
     }
         
@@ -341,7 +398,7 @@ $( document ).ready(function() {
                     });
                    
                 } else {
-                    alert("Error!");
+                    start();
                 }
             });
         }
