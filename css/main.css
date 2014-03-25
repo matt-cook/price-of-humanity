@@ -1,6 +1,7 @@
 body{
         color:#fff;
         font-family:helvetica,sans-serif;
+        background:#333;
        }
        a{
         color:#fff;
@@ -221,15 +222,17 @@ body{
         -moz-filter: saturate(30%) contrast(85%);
         -o-filter: saturate(30%) contrast(85%);
         -ms-filter: saturate(30%) contrast(85%);
-        min-height:100%;
-        height:auto;
-        width:60%;
        }
        #content img{
         left:0;
+        min-height:100%;
+        min-width:60%;
        }
        #content canvas{
         right:0;
+        min-height:100%;
+        height:auto;
+        width:60%;
        }
        #content .info{
         display:block;
