@@ -19,7 +19,7 @@ $( document ).ready(function() {
     var dataLoaded = false;
     var friendsLoaded = false;
     var $window = $(window);
-    var MENU_TIMEOUT = 1500; //hide menu after inactivity
+    var MENU_TIMEOUT = 1000; //hide menu after inactivity
     var MENU_ANIM_TIME = 1000;
     var minCost;
     var maxCost;
@@ -214,6 +214,7 @@ $( document ).ready(function() {
             var canvas = $c.find('canvas').get(0);
             var image = new Image();
             var ctx = canvas.getContext('2d');
+            var w = $('#content')
             image.onload = function() {
               if(this.width >= this.height) $(canvas).addClass('horizontal');
               else $(canvas).addClass('vertical');
@@ -303,6 +304,8 @@ $( document ).ready(function() {
     
     function start(){
       $('.overlay').hide();
+      var i = Math.round(Math.random()*costs.length);
+      selectCost("cost"+costs[i].ID);
       $(window).mousemove(showMenu);
     }
         
