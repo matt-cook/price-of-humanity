@@ -199,7 +199,13 @@ $( document ).ready(function() {
                   name = "Matt";
               }
             }
-            var html = '<li data-cost="'+costID+'"><canvas></canvas><div class="info"><h2><span class="name">'+name+'</span>&#39;s life is worth $'+c.cost+'</h2><br><h3>as '+c.as+' in '+c.location;
+            $.each(locations,function(i,loc){
+                if(c.location == loc.title){
+                    c.region = loc.region;
+                    return;
+                }
+            });
+            var html = '<li data-cost="'+costID+'"><canvas></canvas><div class="story"><div class="story-details"><h4>why this price?</h4>'+c.detail+'<h5>What is in the photo?</h5></div><div class="region"><h4><span>this price is from </span>'+c.region+'.</h4><h4>'+c.region+' stats:</h4></div></div><div class="info"><h2><span class="name">'+name+'</span>&#39;s life is worth $'+c.cost+'</h2><br><h3>as '+c.as+' in '+c.location;
             if(c.when) html += ', '+c.when;
             html += '.</h3></div></li>';
             $c = $(html).appendTo($('#content ul'));
