@@ -25,13 +25,6 @@ $( document ).ready(function() {
     var maxCost;
     var menuTimeout;
   
-  
-    //busted for now, since we're also allowing click to select
-   /* $(window).scroll(function(e){
-        var h = $window.height();
-        var i = Math.round($window.scrollTop()/h);
-        selectCost($($('#cost li').get(i)).attr('id'));
-    });*/
     $(window).scroll($.debounce(500,snapToContent));
     
     $(window).resize(function() {
@@ -47,8 +40,21 @@ $( document ).ready(function() {
     });
     
     function snapToContent(){
-            var h = $window.height();
-            $("body").animate({ scrollTop: (Math.round($window.scrollTop()/h)*h)+"px" });
+        var h = $window.height();
+        $("body").animate({ scrollTop: (Math.round($window.scrollTop()/h)*h)+"px" });
+        var i = Math.floor($window.scrollTop()/h);
+        var costID = $($('#content li').get(i)).attr('data-cost');
+        $('.selected').removeClass('selected');
+        var $c = $('#'+costID);
+        $c.addClass('selected');
+        var countryID = $c.attr('data-country');
+        $('#cost .active').css({ background:''});
+        $('.active').removeClass('active');
+        var color = $('#'+countryID).addClass('active').find('a').css('background-color');
+        var $costs = $('#cost li[data-country="'+countryID+'"]');
+        $costs.addClass('active').css({
+          background:color
+        });
     }
     
     function hideMenu(){
@@ -87,7 +93,6 @@ $( document ).ready(function() {
     function selectLocation(countryID){
       $('#cost .active').css({ background:''});
       $('.active').removeClass('active');
-
       var color = $('#'+countryID).addClass('active').find('a').css('background-color');
       var $costs = $('#cost li[data-country="'+countryID+'"]');
       $costs.addClass('active').css({
