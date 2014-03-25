@@ -30,7 +30,8 @@ $( document ).ready(function() {
       //$('.story').fadeOut();
       $('#about').fadeOut();
     });
-    $(window).scroll(function(){
+    $(window).on('scroll',highlight);
+    function highlight(){
         var h = $window.height();
         var i = Math.round($window.scrollTop()/h);
         var costID = $($('#content li').get(i)).attr('data-cost');
@@ -45,8 +46,7 @@ $( document ).ready(function() {
         $costs.addClass('active').css({
           background:color
         });
-
-    });
+    }
     
     $(window).resize(function() {
         snapToContent();
@@ -111,13 +111,16 @@ $( document ).ready(function() {
     }
     
     function selectCost(costID){
+      $(window).off('scroll',highlight);
       $('.selected').removeClass('selected');
       var $c = $('#'+costID);
       $c.addClass('selected');
       var countryID = $c.attr('data-country');
       if(!$('#'+countryID+'.active').length) selectLocation(countryID);
       var h = $window.height();
-      $("body").animate({ scrollTop: ($c.index()*h)+"px" });
+      $("body").animate({ scrollTop: ($c.index()*h)+"px" },function(){
+        $(window).on('scroll',highlight);
+      });
     }
     
     function setLocationHeight(){
