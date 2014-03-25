@@ -15,8 +15,7 @@ $( document ).ready(function() {
     //FB and jQuery are ready
     
     var friends = [];
-    var costs, locations;
-    var costImages;
+    var costs, locations, regions, costImages; //these will be arrays of all the .csv data
     var dataLoaded = false;
     var friendsLoaded = false;
     var $window = $(window);
@@ -118,8 +117,12 @@ $( document ).ready(function() {
     $.get('./data/cost.csv',function(data){
         costs = $.csv.toObjects(data);
         
+        $.get('./data/regions.csv',function(data){
+        regions = $.csv.toObjects(data);
+        
         $.get('./data/locations.csv',function(data){
            locations = $.csv.toObjects(data);
+   
            var height = Math.floor(($('#location').height()-locations.length*2)/locations.length);
             $.each(locations,function(i,l){
                 var countryID = l.title.trim().toLowerCase().replace(' ','-');
@@ -245,6 +248,7 @@ $( document ).ready(function() {
                   loadComplete();
               }
           });
+        });
         });
         });
     });
