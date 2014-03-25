@@ -208,11 +208,21 @@ $( document ).ready(function() {
             $.each(costImages,function(i,img){
                 if(c.cost == img.costs){
                     c.imgCaption = img.caption;
+                    c.imgSrc = img.url;
                     return;
                 }
             });
-            var whyPrice = (typeof c.detail === 'undefined' || c.detail.length == 0) ? '' : '<h4>why this price?</h4>'+c.detail;
-            var whatPhoto = (typeof c.imgCaption === 'undefined' || c.imgCaption.length == 0) ? '' : '<h5>What is in the photo?</h5>'+c.imgCaption;
+            var whyPrice = (typeof c.detail === 'undefined' || c.detail.length == 0) ? '' : c.detail+' ';
+            var whyPriceSrc = (typeof c.link_1 === 'undefined' || c.link_1.length == 0) ? '' : 'Check out the <a href="'+c.link_1+'">Source</a>';
+            whyPrice += whyPriceSrc;
+            whyPrice  = (whyPrice.length != 0) ? '<h4>why this price?</h4>'+whyPrice :'';
+            
+            
+            var whatPhoto = (typeof c.imgCaption === 'undefined' || c.imgCaption.length == 0) ? '' : c.imgCaption+' ';
+            var whatPhotoSrc = (typeof c.imgSrc === 'undefined' || c.imgSrc.length == 0) ? '' : 'See the photo&#39;s <a href="'+c.imgSrc+'">Source</a>';
+            whatPhoto += whatPhotoSrc;
+            whatPhoto = (whatPhoto.length != 0) ? '<h5>What is in the photo?</h5>'+whatPhoto : '';
+            
             var details = (whyPrice.length != 0 ||  whatPhoto.length != 0) ? '<div class="story-details">'+whyPrice+whatPhoto+'</div>' : '';
             
             var region = '<div class="region"><h4><span>this price is from </span>'+c.region+'.</h4><h4>'+c.region+' stats:</h4></div>'
