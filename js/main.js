@@ -228,7 +228,14 @@ $( document ).ready(function() {
                 if(imgC == c.ID) matches.push(img.filename);
             });
         });
-        image.src = matches.length? './img/cost/'+matches[Math.floor(Math.random()*matches.length)] : './img/cost/'+costImages[Math.floor(Math.random()*costImages.length)].filename;
+        if(matches.length){
+          //use random matching image
+          image.src = './img/cost/'+matches[Math.floor(Math.random()*matches.length)];
+        }else{
+          //no matching images, use completely random photo
+          console.error('No matching image for #'+c.ID+' "'+c.as+'"');
+          image.src = './img/cost/'+costImages[Math.floor(Math.random()*costImages.length)].filename;
+        }
         },function(i){
             //cost loading progress updated
             currentCountryIndex = i;
