@@ -189,7 +189,7 @@ body{
         background:#000;
        }
        #cost li{
-        text-indent:-9999;
+        text-indent:-9999px;
         display:block;
         height:5px;
         width:90px;

@@ -1,7 +1,7 @@
-if(!window.chrome) {
+/*if(!window.chrome) {
   alert("This application requires Google Chrome");
   window.location = "http://www.google.com/chrome";
-}
+}*/
 
 window.fbAsyncInit = function() {
     //FB is ready
@@ -32,7 +32,7 @@ $( document ).ready(function() {
     });
     $(window).on('scroll',highlight);
     function highlight(){
-        var h = $window.height();
+        var h = window.innerHeight;
         var i = Math.round($window.scrollTop()/h);
         var costID = $($('#content li').get(i)).attr('data-cost');
         $('.selected').removeClass('selected');
@@ -51,20 +51,23 @@ $( document ).ready(function() {
     $(window).resize(function() {
         snapToContent();
         if(dataLoaded){
-          $('#cost li').each(function(i,$c){
-            var value =  parseInt($c.attr('data-value'));
-            $c.css({
-              top:(Math.round((value-minCost)/(maxCost-minCost)*$(window).height()))+'px'
+          $('#cost li').each(function(i,c){
+            var value =  parseInt($(c).attr('data-value'));
+            $(c).css({
+              top:(Math.round((value-minCost)/(maxCost-minCost)*window.innerHeight))+'px'
             });
           });
         }
     });
     
     function snapToContent(){
-        var h = $window.height();
-        $("body").animate({ scrollTop: (Math.round($window.scrollTop()/h)*h)+"px" });
-        //if(!$('.photo-story a').is(':visible') && !$('.photo-story a').is(':animated')) $('.photo-story a').fadeIn();
-           }
+
+        var h = window.innerHeight;
+        $("body").animate({ scrollTop: (Math.round($window.scrollTop()/h)*h)+"px" },function(){
+          //if(!$('.photo-story a').is(':visible') && !$('.photo-story a').is(':animated')) $('.photo-story a').fadeIn();
+        });
+    }
+
     
     function hideMenu(){
         if($('#interface').hasClass('open')){
@@ -117,10 +120,11 @@ $( document ).ready(function() {
       $c.addClass('selected');
       var countryID = $c.attr('data-country');
       if(!$('#'+countryID+'.active').length) selectLocation(countryID);
-      var h = $window.height();
+      var h = window.innerHeight;
       $("body").animate({ scrollTop: ($c.index()*h)+"px" },function(){
         $(window).on('scroll',highlight);
       });
+
     }
     
     function setLocationHeight(){
