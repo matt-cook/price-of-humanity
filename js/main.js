@@ -27,7 +27,8 @@ $( document ).ready(function() {
     $(window).scroll($.debounce(800,snapToContent));
     $(window).on('scroll click',function(){
       //$('.photo-story a').fadeOut();
-      $('.story').fadeOut();
+      //$('.story').fadeOut();
+      $('#about').fadeOut();
     });
     
     $(window).resize(function() {
@@ -44,9 +45,8 @@ $( document ).ready(function() {
     
     function snapToContent(){
         var h = $window.height();
-        $("body").animate({ scrollTop: (Math.round($window.scrollTop()/h)*h)+"px" },function(){
-          //if(!$('.photo-story a').is(':visible') && !$('.photo-story a').is(':animated')) $('.photo-story a').fadeIn();
-        });
+        $("body").animate({ scrollTop: (Math.round($window.scrollTop()/h)*h)+"px" });
+        //if(!$('.photo-story a').is(':visible') && !$('.photo-story a').is(':animated')) $('.photo-story a').fadeIn();
         var i = Math.floor($window.scrollTop()/h);
         var costID = $($('#content li').get(i)).attr('data-cost');
         $('.selected').removeClass('selected');
@@ -335,17 +335,24 @@ $( document ).ready(function() {
         FB.login(getFriends, {scope: 'basic_info,user_birthday,friends_birthday'});
     });
     $('.message .close').click(start);
-    $('.photo-story').click(function(e){
+    /*$('.photo-story').click(function(e){
         e.preventDefault();
         if($('.story').is(':visible')) $('.story').fadeOut();
         else $('.story').fadeIn();
+        return false;
+    });*/
+    $('.about a').click(function(e){
+        e.preventDefault();
+        if($('#about').is(':visible')) $('#about').fadeOut();
+        else $('#about').fadeIn();
         return false;
     });
     
     function start(){
       $('.overlay').hide();
-      $('.story').hide().removeClass('hidden');
+     // $('.story').hide().removeClass('hidden');
      // $('.photo-story a').hide().removeClass('hidden');
+      $('#about').hide().removeClass('hidden');
       var i = Math.round(Math.random()*costs.length);
       selectCost("cost"+costs[i].ID);
       $(window).mousemove(showMenu);
