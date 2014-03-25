@@ -119,132 +119,132 @@ $( document ).ready(function() {
         costs = $.csv.toObjects(data);
         
         $.get('./data/locations.csv',function(data){
-         locations = $.csv.toObjects(data);
-         var height = Math.floor(($('#location').height()-locations.length*2)/locations.length);
-        $.each(locations,function(i,l){
-            var countryID = l.title.trim().toLowerCase().replace(' ','-');
-           $('<li id="'+countryID+'"><a href="#">'+l.label+'</a></li>').css({
-                "height":height+'px',
-                "line-height":height+'px'
-            }).hide().appendTo('#location ul').find('a').css({
-                "background-color":'#'+l.color
-            }).click(function(){
-               selectLocation(countryID);
+           locations = $.csv.toObjects(data);
+           var height = Math.floor(($('#location').height()-locations.length*2)/locations.length);
+            $.each(locations,function(i,l){
+                var countryID = l.title.trim().toLowerCase().replace(' ','-');
+               $('<li id="'+countryID+'"><a href="#">'+l.label+'</a></li>').css({
+                    "height":height+'px',
+                    "line-height":height+'px'
+                }).hide().appendTo('#location ul').find('a').css({
+                    "background-color":'#'+l.color
+                }).click(function(){
+                   selectLocation(countryID);
+                });
             });
-        });
-        
-        $.get('./data/cost-images.csv',function(data){
-        costImages = $.csv.toObjects(data);
-        minCost = costs[0].cost;
-        maxCost = costs[costs.length-1].cost;
-        $('#cost .min').text('$'+minCost).attr('data-value',minCost.replace(/,/g, ""));
-        $('#cost .max').text('$'+maxCost).attr('data-value',maxCost.replace(/,/g, ""));
-        minCost = parseInt(minCost.replace(/,/g, ""));
-        maxCost = parseInt(maxCost.replace(/,/g, ""));
-        var currentCountryIndex = 0;
-        $.eachCallback(costs,function(){
-          var c = this;
-          var countryID = c.location.trim().toLowerCase().replace(' ','-');
-          var costID = 'cost'+c.ID;
-          var country = c.location.trim();
-          $('.status').text(Math.round(currentCountryIndex/costs.length*100)+"%: Loading "+country+"...");
-          $('#'+countryID).show();
-          var value = parseInt(c.cost.replace(/,/g, ""));
-          var top = Math.round((value-minCost)/(maxCost-minCost)*$('#cost ul').height());
-          $('<li id="'+costID+'" data-value="'+value+'" data-country="'+countryID+'"><a href="#">$'+c.cost.trim()+'</a></li>').css({
-            top:top+'px'
-          }).appendTo('#cost ul').find('a').click(function(){
-            selectCost(costID);
-          });
-          var img;
-          var name;
-          var maxImg = 9;
-          if(c.gender == 'f'){
-            //grete
-            img = "img/friends/grete/"+Math.ceil(Math.random()*maxImg)+'-grete.jpg';
-            name = "Grete";
-          }else if(c.gender = 'm'){
-            var who = Math.floor(Math.random()*2);
-            if(who ==0){
-                //kyle
-                img = "img/friends/kyle/"+Math.ceil(Math.random()*maxImg)+'-kyle.jpg';
-                name = "Kyle";
-            }else{
-                //matt
-                img = "img/friends/matt/"+Math.ceil(Math.random()*maxImg)+'-matt.jpg';
-                name = "Matt";
-            }
-          }else{
-            //no gender specified
-            var who = Math.floor(Math.random()*3);
-            if(who == 0){
-                //grete
-                img = "img/friends/grete/"+Math.ceil(Math.random()*maxImg)+'-grete.jpg';
-                name = "Grete";
-            }else if(who == 1){
-                //kyle
-                img = "img/friends/kyle/"+Math.ceil(Math.random()*maxImg)+'-kyle.jpg';
-                name = "Kyle";
-            }else{
-                //matt
-                img = "img/friends/matt/"+Math.ceil(Math.random()*maxImg)+'-matt.jpg';
-                name = "Matt";
-            }
-          }
-          var html = '<li data-cost="'+costID+'"><canvas></canvas><div class="info"><h2><span class="name">'+name+'</span>&#39;s life is worth $'+c.cost+'</h2><br><h3>as '+c.as+' in '+c.location;
-          if(c.when) html += ', '+c.when;
-          html += '.</h3></div></li>';
-          $c = $(html).appendTo($('#content ul'));
-          var $img = $('<img src="'+img+'" alt="" />').one('load', function() {
-            if(this.width >= this.height) $(this).addClass('horizontal');
-            else $(this).addClass('vertical');
-          }).each(function() {
-            if(this.complete) $(this).load();
-          });
-          $c.prepend($img);
           
-          var canvas = $c.find('canvas').get(0);
-          var image = new Image();
-          var ctx = canvas.getContext('2d');
-          image.onload = function() {
-            if(this.width >= this.height) $(canvas).addClass('horizontal');
-            else $(canvas).addClass('vertical');
-            canvas.width = image.width;
-            canvas.height = image.height;
-            ctx.globalCompositeOperation = 'source-over';
-            ctx.drawImage(image, 0, 0);
-            ctx.globalCompositeOperation = 'destination-out';
-            ctx.beginPath();
-            ctx.moveTo(0, 0);
-            ctx.lineTo(parseInt(0.27*canvas.width),0);
-            ctx.lineTo(0,canvas.height);
-            ctx.closePath();
-            ctx.fill();
-        };
-        var matches = [];
-        $.each(costImages,function(i,img){
-            var costs = img.costs.split(',');
-            $.each(costs,function(i,imgC){
-                if(imgC == c.ID) matches.push(img.filename);
+          $.get('./data/cost-images.csv',function(data){
+          costImages = $.csv.toObjects(data);
+          minCost = costs[0].cost;
+          maxCost = costs[costs.length-1].cost;
+          $('#cost .min').text('$'+minCost).attr('data-value',minCost.replace(/,/g, ""));
+          $('#cost .max').text('$'+maxCost).attr('data-value',maxCost.replace(/,/g, ""));
+          minCost = parseInt(minCost.replace(/,/g, ""));
+          maxCost = parseInt(maxCost.replace(/,/g, ""));
+          var currentCountryIndex = 0;
+          $.eachCallback(costs,function(){
+            var c = this;
+            var countryID = c.location.trim().toLowerCase().replace(' ','-');
+            var costID = 'cost'+c.ID;
+            var country = c.location.trim();
+            $('.status').text(Math.round(currentCountryIndex/costs.length*100)+"%: Loading "+country+"...");
+            $('#'+countryID).show();
+            var value = parseInt(c.cost.replace(/,/g, ""));
+            var top = Math.round((value-minCost)/(maxCost-minCost)*$('#cost ul').height());
+            $('<li id="'+costID+'" data-value="'+value+'" data-country="'+countryID+'"><a href="#">$'+c.cost.trim()+'</a></li>').css({
+              top:top+'px'
+            }).appendTo('#cost ul').find('a').click(function(){
+              selectCost(costID);
             });
-        });
-        if(matches.length){
-          //use random matching image
-          image.src = './img/cost/'+matches[Math.floor(Math.random()*matches.length)];
-        }else{
-          //no matching images, use completely random photo
-          console.error('No matching image for #'+c.ID+' "'+c.as+'"');
-          image.src = './img/cost/'+costImages[Math.floor(Math.random()*costImages.length)].filename;
-        }
-        },function(i){
-            //cost loading progress updated
-            currentCountryIndex = i;
-            if(i == costs.length-1){
-                $('.message').removeClass("loading");
-                dataLoaded = true;
-                loadComplete();
+            var img;
+            var name;
+            var maxImg = 9;
+            if(c.gender == 'f'){
+              //grete
+              img = "img/friends/grete/"+Math.ceil(Math.random()*maxImg)+'-grete.jpg';
+              name = "Grete";
+            }else if(c.gender = 'm'){
+              var who = Math.floor(Math.random()*2);
+              if(who ==0){
+                  //kyle
+                  img = "img/friends/kyle/"+Math.ceil(Math.random()*maxImg)+'-kyle.jpg';
+                  name = "Kyle";
+              }else{
+                  //matt
+                  img = "img/friends/matt/"+Math.ceil(Math.random()*maxImg)+'-matt.jpg';
+                  name = "Matt";
+              }
+            }else{
+              //no gender specified
+              var who = Math.floor(Math.random()*3);
+              if(who == 0){
+                  //grete
+                  img = "img/friends/grete/"+Math.ceil(Math.random()*maxImg)+'-grete.jpg';
+                  name = "Grete";
+              }else if(who == 1){
+                  //kyle
+                  img = "img/friends/kyle/"+Math.ceil(Math.random()*maxImg)+'-kyle.jpg';
+                  name = "Kyle";
+              }else{
+                  //matt
+                  img = "img/friends/matt/"+Math.ceil(Math.random()*maxImg)+'-matt.jpg';
+                  name = "Matt";
+              }
             }
-        });
+            var html = '<li data-cost="'+costID+'"><canvas></canvas><div class="info"><h2><span class="name">'+name+'</span>&#39;s life is worth $'+c.cost+'</h2><br><h3>as '+c.as+' in '+c.location;
+            if(c.when) html += ', '+c.when;
+            html += '.</h3></div></li>';
+            $c = $(html).appendTo($('#content ul'));
+            var $img = $('<img src="'+img+'" alt="" />').one('load', function() {
+              if(this.width >= this.height) $(this).addClass('horizontal');
+              else $(this).addClass('vertical');
+            }).each(function() {
+              if(this.complete) $(this).load();
+            });
+            $c.prepend($img);
+            
+            var canvas = $c.find('canvas').get(0);
+            var image = new Image();
+            var ctx = canvas.getContext('2d');
+            image.onload = function() {
+              if(this.width >= this.height) $(canvas).addClass('horizontal');
+              else $(canvas).addClass('vertical');
+              canvas.width = image.width;
+              canvas.height = image.height;
+              ctx.globalCompositeOperation = 'source-over';
+              ctx.drawImage(image, 0, 0);
+              ctx.globalCompositeOperation = 'destination-out';
+              ctx.beginPath();
+              ctx.moveTo(0, 0);
+              ctx.lineTo(parseInt(0.27*canvas.width),0);
+              ctx.lineTo(0,canvas.height);
+              ctx.closePath();
+              ctx.fill();
+          };
+          var matches = [];
+          $.each(costImages,function(i,img){
+              var costs = img.costs.split(',');
+              $.each(costs,function(i,imgC){
+                  if(imgC == c.ID) matches.push(img.filename);
+              });
+          });
+          if(matches.length){
+            //use random matching image
+            image.src = './img/cost/'+matches[Math.floor(Math.random()*matches.length)];
+          }else{
+            //no matching images, use completely random photo
+            console.error('No matching image for #'+c.ID+' "'+c.as+'"');
+            image.src = './img/cost/'+costImages[Math.floor(Math.random()*costImages.length)].filename;
+          }
+          },function(i){
+              //cost loading progress updated
+              currentCountryIndex = i;
+              if(i == costs.length-1){
+                  $('.message').removeClass("loading");
+                  dataLoaded = true;
+                  loadComplete();
+              }
+          });
         });
         });
     });
