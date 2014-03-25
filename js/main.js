@@ -30,6 +30,23 @@ $( document ).ready(function() {
       //$('.story').fadeOut();
       $('#about').fadeOut();
     });
+    $(window).scroll(function(){
+        var h = $window.height();
+        var i = Math.round($window.scrollTop()/h);
+        var costID = $($('#content li').get(i)).attr('data-cost');
+        $('.selected').removeClass('selected');
+        var $c = $('#'+costID);
+        $c.addClass('selected');
+        var countryID = $c.attr('data-country');
+        $('#cost .active').css({ background:''});
+        $('.active').removeClass('active');
+        var color = $('#'+countryID).addClass('active').find('a').css('background-color');
+        var $costs = $('#cost li[data-country="'+countryID+'"]');
+        $costs.addClass('active').css({
+          background:color
+        });
+
+    });
     
     $(window).resize(function() {
         snapToContent();
@@ -47,20 +64,7 @@ $( document ).ready(function() {
         var h = $window.height();
         $("body").animate({ scrollTop: (Math.round($window.scrollTop()/h)*h)+"px" });
         //if(!$('.photo-story a').is(':visible') && !$('.photo-story a').is(':animated')) $('.photo-story a').fadeIn();
-        var i = Math.floor($window.scrollTop()/h);
-        var costID = $($('#content li').get(i)).attr('data-cost');
-        $('.selected').removeClass('selected');
-        var $c = $('#'+costID);
-        $c.addClass('selected');
-        var countryID = $c.attr('data-country');
-        $('#cost .active').css({ background:''});
-        $('.active').removeClass('active');
-        var color = $('#'+countryID).addClass('active').find('a').css('background-color');
-        var $costs = $('#cost li[data-country="'+countryID+'"]');
-        $costs.addClass('active').css({
-          background:color
-        });
-    }
+           }
     
     function hideMenu(){
         if($('#interface').hasClass('open')){
