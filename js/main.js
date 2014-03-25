@@ -205,7 +205,18 @@ $( document ).ready(function() {
                     return;
                 }
             });
-            var html = '<li data-cost="'+costID+'"><canvas></canvas><div class="story"><div class="story-details"><h4>why this price?</h4>'+c.detail+'<h5>What is in the photo?</h5></div><div class="region"><h4><span>this price is from </span>'+c.region+'.</h4><h4>'+c.region+' stats:</h4></div></div><div class="info"><h2><span class="name">'+name+'</span>&#39;s life is worth $'+c.cost+'</h2><br><h3>as '+c.as+' in '+c.location;
+            $.each(costImages,function(i,img){
+                if(c.cost == img.costs){
+                    c.imgCaption = img.caption;
+                    return;
+                }
+            });
+            var whyPrice = (typeof c.detail === 'undefined' || c.detail.length == 0) ? '' : '<h4>why this price?</h4>'+c.detail;
+            var whatPhoto = (typeof c.imgCaption === 'undefined' || c.imgCaption.length == 0) ? '' : '<h5>What is in the photo?</h5>'+c.imgCaption;
+            var details = (whyPrice.length != 0 ||  whatPhoto.length != 0) ? '<div class="story-details">'+whyPrice+whatPhoto+'</div>' : '';
+            
+            var region = '<div class="region"><h4><span>this price is from </span>'+c.region+'.</h4><h4>'+c.region+' stats:</h4></div>'
+            var html = '<li data-cost="'+costID+'"><canvas></canvas><div class="story">'+details+region+'</div><div class="info"><h2><span class="name">'+name+'</span>&#39;s life is worth $'+c.cost+'</h2><br><h3>as '+c.as+' in '+c.location;
             if(c.when) html += ', '+c.when;
             html += '.</h3></div></li>';
             $c = $(html).appendTo($('#content ul'));
