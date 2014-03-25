@@ -25,7 +25,7 @@ $( document ).ready(function() {
     var maxCost;
     var menuTimeout;
   
-    $(window).scroll($.debounce(500,snapToContent));
+    $(window).scroll($.debounce(800,snapToContent));
     
     $(window).resize(function() {
         snapToContent();
