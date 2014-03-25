@@ -308,6 +308,7 @@ body{
           position:absolute;
           top:45px;
           right:225px;
+          z-index:5;
         }
         .story-details{
             background: black;
