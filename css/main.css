@@ -256,3 +256,35 @@ body{
         #content h3{
             font-size:1.5em;
         }
+        #content h4,
+        #content h5{
+          text-transform:uppercase;
+          padding-bottom:12px;
+          font-size:.8em;
+          font-weight:300;
+        }
+        #content h5{
+          padding-top:12px;
+        }
+        .story{
+          width:40%;
+          background:green;
+          height:auto;
+          min-height:200px;
+          position:absolute;
+          top:45px;
+          right:225px;
+        }
+        .story-details{
+            background: black;
+            padding:20px;
+        }
+        .story-details{
+            color:grey;
+        }
+        .region{
+            padding:20px;
+        }
+        .region h4 span{
+            color:#000;
+        }
